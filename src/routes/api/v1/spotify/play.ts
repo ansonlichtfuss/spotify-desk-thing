@@ -1,13 +1,13 @@
 import { APIEvent, json } from "solid-start";
+import { fetch } from "undici";
 
 const PLAY_ENDPOINT = `https://api.spotify.com/v1/me/player/play`;
 
-export async function POST({ params }: APIEvent) {
-  const { access_token } = params;
+export async function POST({ request }: APIEvent) {
   const response = await fetch(PLAY_ENDPOINT, {
     method: "PUT",
     headers: {
-      Authorization: `Bearer ${access_token}`,
+      Authorization: request.headers.get("Authorization") ?? "",
     },
   });
 

@@ -1,11 +1,11 @@
 import { APIEvent, json } from "solid-start";
-import { Response, fetch } from "undici";
+import { fetch } from "undici";
 
 const NOW_PLAYING_ENDPOINT = `https://api.spotify.com/v1/me/player?additional_types=track,episode`;
 
 export async function GET({ request }: APIEvent) {
   try {
-    const res: Response = await fetch(NOW_PLAYING_ENDPOINT, {
+    const res = await fetch(NOW_PLAYING_ENDPOINT, {
       headers: {
         Authorization: request.headers.get("Authorization") ?? "",
       },
