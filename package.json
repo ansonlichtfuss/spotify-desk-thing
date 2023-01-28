@@ -1,0 +1,32 @@
+{
+  "name": "spotify-desk-thing",
+  "scripts": {
+    "dev": "solid-start dev",
+    "build": "solid-start build",
+    "start": "solid-start start"
+  },
+  "type": "module",
+  "devDependencies": {
+    "@solid-primitives/intersection-observer": "^2.0.4",
+    "@unocss/preset-wind": "^0.49.1",
+    "@unocss/reset": "^0.49.1",
+    "@unocss/vite": "^0.49.1",
+    "date-fns": "^2.29.3",
+    "extract-colors": "^2.0.4",
+    "inter-ui": "^3.19.3",
+    "prettier": "^2.8.3",
+    "solid-start-node": "^0.2.15",
+    "typescript": "^4.9.4",
+    "vite": "^3.2.5"
+  },
+  "dependencies": {
+    "@solidjs/meta": "^0.28.2",
+    "@solidjs/router": "^0.7.0",
+    "solid-js": "^1.6.9",
+    "solid-start": "^0.2.15",
+    "undici": "^5.15.1"
+  },
+  "engines": {
+    "node": ">=16"
+  }
+}
