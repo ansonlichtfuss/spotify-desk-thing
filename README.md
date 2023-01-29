@@ -1,30 +1,21 @@
-# SolidStart
 
-Everything you need to build a Solid project, powered by [`solid-start`](https://start.solidjs.com);
 
-## Creating a project
+# Spotify Desk Thing
 
-```bash
-# create a new project in the current directory
-npm init solid@latest
+A custom clone of the Spotify Car Thing UI, providing control via the Spotify API instead of Bluetooth (no need to pair devices and it can control most playback scenarios).
 
-# create a new project in my-app
-npm init solid@latest my-app
-```
+Written in [SolidJS](https://www.solidjs.com) using [SolidStart](https://start.solidjs.com/getting-started/what-is-solidstart). The core now playing screen and play/pause functionality is working and running on my Raspberry Pi 3A with Hyperpixel Square.
 
-## Developing
+### TODO:
 
-Once you've created a project and installed dependencies with `npm install` (or `pnpm install` or `yarn`), start a development server:
+- Add documentation and pictures
+- Connect the shuffle/heart buttons
+- Custom podcast controls
+- Copy better background color generation logic from the source code reconstruction:
+  - https://github.com/Merlin04/superbird-webapp/blob/ccec5307cd89b1b70996f1e67de6125a91ae3929/helpers/ColorExtractor.ts
 
-```bash
-npm run dev
+---
 
-# or start the server and open the app in a new browser tab
-npm run dev -- --open
-```
+Credit: Other folks rooting and discovering the Spotify Car Thing is a web view running Chromium
 
-## Building
-
-Solid apps are built with _adapters_, which optimise your project for deployment to different environments.
-
-By default, `npm run build` will generate a Node app that you can run with `npm start`. To use a different adapter, add it to the `devDependencies` in `package.json` and specify in your `vite.config.js`.
+- https://github.com/err4o4/spotify-car-thing-reverse-engineering/issues
