@@ -151,7 +151,6 @@ const SpotifyNowPlaying: Component = () => {
           style={{
             width: `${PREVIEW_SIZE}px`,
             height: `${PREVIEW_SIZE}px`,
-            "box-shadow": "0 15px 50px rgba(0,0,0,0.5)",
           }}
         >
           <div class="absolute z-0">
