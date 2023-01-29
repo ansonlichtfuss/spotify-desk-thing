@@ -6,13 +6,11 @@ const INITIAL_INDEX = 0;
 
 const Carousel: Component = () => {
   const [activeIndex, setActiveIndex] = createSignal(INITIAL_INDEX);
-  console.log("hey tiff Carousel render");
-
   return (
     <div class="flex items-center justify-center w-screen h-screen bg-black text-white">
       <div
         class="relative overflow-x-scroll flex"
-        style={{ flex: "none", width: `${CARD_SIZE}px`, height: `${CARD_SIZE}px`, "scroll-snap-type": "x mandatory" }}
+        style={{ flex: "none", width: `${CARD_SIZE}px`, height: `${CARD_SIZE}px`, "scroll-snap-type": "x mandatory", "scroll-snap-stop": "always" }}
       >
         <Card>
           <Clock />

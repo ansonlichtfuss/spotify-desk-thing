@@ -11,12 +11,8 @@ export async function GET({ request }: APIEvent) {
       },
     });
 
-    console.log('hey tiff now playing', res.status)
-
     if (res.status === 200) {
       const body: any = await res.json();
-      console.log('hey tiff now playing json', body)
-
       return json(body);
     } else if (res.status === 204) {
       return json({ is_playing: false });

@@ -27,7 +27,5 @@ export async function GET() {
     scope: string;
   } = await req.json();
 
-  // console.log("hey tiff auth", response);
-
   return json(response, 200);
 }

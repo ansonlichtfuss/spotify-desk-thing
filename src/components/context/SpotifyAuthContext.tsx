@@ -37,9 +37,7 @@ export const SpotifyAuthProvider: ParentComponent = (props) => {
   const [state, setState] = createStore(defaultState);
 
   const getToken = async () => {
-    console.log("hey tiff get token");
     if (isAfter(new Date(), state.calculatedExpiration)) {
-      console.log("hey tiff get token EXPIRED, getting new one");
       const response = await getSpotifyAccessToken();
       setState({
         ...response,
@@ -47,10 +45,8 @@ export const SpotifyAuthProvider: ParentComponent = (props) => {
           seconds: response.expires_in - 600,
         }),
       });
-      console.log("hey tiff auth", state);
       return response.access_token;
     } else {
-      console.log("hey tiff get token cached, returning");
       return state.access_token;
     }
   };

@@ -5,11 +5,9 @@ export const CARD_SIZE = 715;
 
 const Card: Component<ParentProps> = (props) => {
   let ref: HTMLDivElement;
-  const isVisible = createVisibilityObserver({ threshold: 0.1 })(
+  const isVisible = createVisibilityObserver({ threshold: 0.5 })(
     () => ref || undefined
   );
-
-  // console.log('render card', props.id, isVisible())
 
   return (
     <div

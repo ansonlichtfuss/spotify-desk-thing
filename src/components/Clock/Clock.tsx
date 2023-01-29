@@ -7,21 +7,15 @@ import { Component, createEffect, createSignal, onCleanup } from "solid-js";
 const Clock: Component = () => {
   const [time, setTime] = createSignal(new Date());
   let intervalRef: number = -1;
-  console.log("hey tiff Clock render");
 
   createEffect(() => {
-    console.log("hey tiff interval effect");
-
     if (intervalRef === -1) {
       intervalRef = setInterval(() => {
-        console.log("time FUCK");
         setTime(new Date());
       }, 1000);
     }
 
-
     onCleanup(() => {
-      console.log("hey tiff clear interval");
       if (intervalRef !== -1) {
         clearInterval(intervalRef);
         intervalRef = -1;

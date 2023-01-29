@@ -45,7 +45,6 @@ const SpotifyNowPlaying: Component = () => {
   const getNowPlaying = async () => {
     const accessToken = await getToken();
     const response = await getSpotifyNowPlaying(accessToken);
-    console.log("getNowPlaying", response);
     setNowPlaying(response);
     setNowPlayingProgressMs(response.progress_ms);
   };
@@ -54,27 +53,22 @@ const SpotifyNowPlaying: Component = () => {
     const accessToken = await getToken();
     const response = await setSpotifyPause(accessToken);
     setTimeout(() => getNowPlaying(), 500);
-    console.log("setPause", response);
   };
 
   const setPlay = async () => {
     const accessToken = await getToken();
     const response = await setSpotifyPlay(accessToken);
     setTimeout(() => getNowPlaying(), 500);
-    console.log("setPlay", response);
   };
 
   // Now playing algorithm
   createEffect(() => {
-    console.log("hey tiff initialization effect");
     if (nowPlaying() === null) {
-      console.log("hey tiff effect get details");
       getNowPlaying();
     }
   });
 
   createEffect(() => {
-    console.log("hey tiff interval effect");
     let interval;
     let progressInterval;
     const thisNowPlaying = nowPlaying();
@@ -83,7 +77,6 @@ const SpotifyNowPlaying: Component = () => {
 
       const timeLeftOnSong =
         thisNowPlaying.item?.duration_ms - thisNowPlaying.progress_ms;
-      console.log("hey tiff DURACTION", timeLeftOnSong, refreshTimeout);
       if (timeLeftOnSong < refreshTimeout) {
         refreshTimeout = timeLeftOnSong + 1000;
       }
@@ -98,7 +91,6 @@ const SpotifyNowPlaying: Component = () => {
     }
 
     onCleanup(() => {
-      console.log("hey tiff clear interval");
       clearInterval(interval);
       clearInterval(progressInterval);
     });
@@ -128,20 +120,13 @@ const SpotifyNowPlaying: Component = () => {
         lightnessDistance: 0.1,
       })
         .then((colors) => {
-          console.log("hey tiff colors", colors);
           let closestToDarkish = 10;
           let bestIndex = 0;
           colors.forEach((color, index) => {
             const lightnessDifferent = Math.abs(
               color.lightness - TARGET_LIGHTNESS
             );
-            console.log(
-              "lightness distance",
-              color.lightness,
-              lightnessDifferent
-            );
             if (lightnessDifferent < closestToDarkish) {
-              console.log("this is the one!");
               closestToDarkish = lightnessDifferent;
               bestIndex = index;
             }
@@ -157,7 +142,7 @@ const SpotifyNowPlaying: Component = () => {
       class="h-full w-full top-0 left-0 p-12 bg-black fixed text-white"
       style={{
         "background-color": `${accentColor()}`,
-        "font-family": "'PlusJakartaSans'",
+        "font-family": "'Plus Jakarta SansVariable'",
       }}
     >
       <div class="flex flex-col items-center">
