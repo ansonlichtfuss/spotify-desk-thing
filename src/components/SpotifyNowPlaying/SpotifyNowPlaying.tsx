@@ -1,12 +1,17 @@
 import { extractColors } from "extract-colors";
 import {
+  Accessor,
   Component,
   createEffect,
   createMemo,
   createSignal,
-  onCleanup
+  onCleanup,
 } from "solid-js";
-import { getSpotifyNowPlaying, setSpotifyPause, setSpotifyPlay } from "~/utils/apiHelpers";
+import {
+  getSpotifyNowPlaying,
+  setSpotifyPause,
+  setSpotifyPlay,
+} from "~/utils/apiHelpers";
 import { useSpotifyAuth } from "../context/SpotifyAuthContext";
 import SvgEmptyHeart from "./icons/bx-heart.svg";
 import SvgMusic from "./icons/bx-music.svg";
@@ -20,65 +25,79 @@ import PlayerControlIcon from "./PlayerControlIcon";
 const PREVIEW_SIZE = 400;
 const DEFAULT_ACCENT_COLOR = '#111111';
 
-const getAlbumMetadata = (nowPlaying) => ({
-  preview: nowPlaying?.item?.album.images[0].url,
-  title: nowPlaying?.item?.name,
-  subtitle: nowPlaying?.item?.artists.map((artist) => artist.name).join(", "),
+const getAlbumMetadata = ({ album }: { album: AlbumMetadata }) => ({
+  preview: album.images[0].url,
+  title: album.name,
+  subtitle: album.artists.map((artist) => artist.name).join(", "),
 });
 
-const getEpisodeMetadata = (nowPlaying) => ({
-  preview: nowPlaying?.item?.images[0].url,
-  title: nowPlaying?.item?.name,
-  subtitle: nowPlaying?.item?.show.name,
+const getEpisodeMetadata = ({ episode }: { episode: EpisodeMetadata }) => ({
+  preview: episode.images[0].url,
+  title: episode.name,
+  subtitle: episode.show.name,
 });
 
-const metadataMappers = {
+const metadataMappers: Record<
+  SpotifyApi.CurrentlyPlayingObject["currently_playing_type"],
+  (item: any) => UiMetadata
+> = {
   track: getAlbumMetadata,
   episode: getEpisodeMetadata,
+  ad: (e) => e, // TODO
+  unknown: (e) => e, // TODO
 };
 
 const SpotifyNowPlaying: Component = () => {
   const [_, { getToken }] = useSpotifyAuth();
-  const [nowPlaying, setNowPlaying] = createSignal<any>(null);
+  const [nowPlaying, setNowPlaying] =
+    createSignal<SpotifyApi.CurrentPlaybackResponse>();
   const [nowPlayingProgressMs, setNowPlayingProgressMs] = createSignal(0);
   const [accentColor, setAccentColor] = createSignal(DEFAULT_ACCENT_COLOR);
 
   const getNowPlaying = async () => {
     const accessToken = await getToken();
+    if (!accessToken) return;
+
     const response = await getSpotifyNowPlaying(accessToken);
     setNowPlaying(response);
-    setNowPlayingProgressMs(response.progress_ms);
+    setNowPlayingProgressMs(response.progress_ms ?? 0);
   };
 
   const setPause = async () => {
     const accessToken = await getToken();
+    if (!accessToken) return;
+    
     const response = await setSpotifyPause(accessToken);
     setTimeout(() => getNowPlaying(), 500);
   };
 
   const setPlay = async () => {
     const accessToken = await getToken();
+    if (!accessToken) return;
+    
     const response = await setSpotifyPlay(accessToken);
     setTimeout(() => getNowPlaying(), 500);
   };
 
   // Now playing algorithm
   createEffect(() => {
-    if (nowPlaying() === null) {
+    if (nowPlaying() === undefined) {
       getNowPlaying();
     }
   });
 
   createEffect(() => {
-    let interval;
-    let progressInterval;
+    let interval: number;
+    let progressInterval: number;
     const thisNowPlaying = nowPlaying();
-    if (thisNowPlaying !== null) {
+    if (thisNowPlaying !== undefined) {
       let refreshTimeout = thisNowPlaying.is_playing ? 8000 : 15000;
 
-      const timeLeftOnSong =
-        thisNowPlaying.item?.duration_ms - thisNowPlaying.progress_ms;
-      if (timeLeftOnSong < refreshTimeout) {
+      const songDuration = thisNowPlaying.item?.duration_ms ?? 0;
+      const currentProgress = thisNowPlaying.progress_ms ?? 0;
+
+      const timeLeftOnSong = songDuration - currentProgress;
+      if (thisNowPlaying.is_playing && timeLeftOnSong < refreshTimeout) {
         refreshTimeout = timeLeftOnSong + 1000;
       }
 
@@ -99,7 +118,7 @@ const SpotifyNowPlaying: Component = () => {
 
   const shouldDisableControls = createMemo(
     () =>
-      nowPlaying() === null ||
+      nowPlaying() === undefined ||
       !nowPlaying()?.device ||
       nowPlaying()?.device?.is_restricted
   );
@@ -108,9 +127,15 @@ const SpotifyNowPlaying: Component = () => {
     () => nowPlayingProgressMs() / (nowPlaying()?.item?.duration_ms || 1)
   );
 
-  const metadata = createMemo(() => {
-    const mapper = metadataMappers[nowPlaying()?.currently_playing_type];
-    return mapper && mapper(nowPlaying());
+  const metadata = createMemo<UiMetadata>(() => {
+    const mapperKey = nowPlaying()?.currently_playing_type ?? "track";
+    const mapper = metadataMappers[mapperKey];
+
+    return mapper && nowPlaying()?.item && mapper(nowPlaying()?.item) || {
+      preview: '',
+      title: '',
+      subtitle: '',
+    };
   });
 
   const TARGET_LIGHTNESS = 0.3;
