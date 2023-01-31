@@ -1,5 +1,5 @@
 import { APIEvent, json } from "solid-start";
-import { fetch } from "undici";
+import fetch from "cross-fetch";
 
 const NOW_PLAYING_ENDPOINT = `https://api.spotify.com/v1/me/player?additional_types=track,episode`;
 
@@ -11,14 +11,20 @@ export async function GET({ request }: APIEvent) {
       },
     });
 
-    if (res.status === 200) {
-      const body: any = await res.json();
-      return json(body);
-    } else if (res.status === 204) {
+    const status = res.status;
+    if (status === 403) {
+      return json(await res.text(), 403)
+    }
+
+    if (status === 200) {
+      return json(await res.json());
+    } else if (status === 204) {
       return json({ is_playing: false });
+    } else {
+      return json(await res.json(), status)
     }
   } catch (e) {
     console.log("nowPlaying error", e);
-    return json("an error happened and its a bummer");
+    return json(e);
   }
 }
