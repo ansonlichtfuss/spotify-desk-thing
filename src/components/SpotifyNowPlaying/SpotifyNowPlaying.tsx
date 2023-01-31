@@ -196,6 +196,7 @@ const SpotifyNowPlaying: Component = () => {
         <PlayerControlIcon
           src={SvgShuffle}
           isDisabled={shouldDisableControls()}
+          showActiveIndicator={nowPlaying()?.shuffle_state}
         />
         <PlayerControlIcon
           src={SvgSkipPrevious}
