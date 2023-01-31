@@ -18,6 +18,7 @@ import SvgSkipPrevious from "./icons/bx-skip-previous.svg";
 import PlayerControlIcon from "./PlayerControlIcon";
 
 const PREVIEW_SIZE = 400;
+const DEFAULT_ACCENT_COLOR = '#111111';
 
 const getAlbumMetadata = (nowPlaying) => ({
   preview: nowPlaying?.item?.album.images[0].url,
@@ -40,7 +41,7 @@ const SpotifyNowPlaying: Component = () => {
   const [_, { getToken }] = useSpotifyAuth();
   const [nowPlaying, setNowPlaying] = createSignal<any>(null);
   const [nowPlayingProgressMs, setNowPlayingProgressMs] = createSignal(0);
-  const [accentColor, setAccentColor] = createSignal("#111111");
+  const [accentColor, setAccentColor] = createSignal(DEFAULT_ACCENT_COLOR);
 
   const getNowPlaying = async () => {
     const accessToken = await getToken();
@@ -134,6 +135,8 @@ const SpotifyNowPlaying: Component = () => {
           setAccentColor(colors[bestIndex].hex);
         })
         .catch(console.error);
+    } else {
+      setAccentColor(DEFAULT_ACCENT_COLOR);
     }
   });
 
