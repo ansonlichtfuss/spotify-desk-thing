@@ -203,7 +203,7 @@ const SpotifyNowPlaying: Component = () => {
         <p class="font-extrabold text-5xl pt-7 pb-2 text-ellipsis overflow-hidden whitespace-nowrap max-w-xl leading-lg">
           {metadata()?.title}
         </p>
-        <p class="opacity-75 text-2xl font-bold">{metadata()?.subtitle}</p>
+        <p class="opacity-75 text-2xl font-bold text-ellipsis overflow-hidden whitespace-nowrap max-w-xl">{metadata()?.subtitle}</p>
       </div>
       <div
         class="hidden fixed w-full left-0 bottom-0 flex items-center justify-between px-10"
