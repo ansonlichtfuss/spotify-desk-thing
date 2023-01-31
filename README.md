@@ -1,5 +1,3 @@
-
-
 # Spotify Desk Thing
 
 A custom clone of the Spotify Car Thing UI, providing control via the Spotify API instead of Bluetooth (no need to pair devices and it can control most playback scenarios).
