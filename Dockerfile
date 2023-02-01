@@ -3,18 +3,16 @@ FROM node:18-alpine AS build
 # Create app directory
 WORKDIR /usr/src/app
 
-# RUN npm install -g pnpm
+# Add pnpm
 RUN corepack enable && corepack prepare pnpm@latest --activate 
 
-# Install app dependencies
-# A wildcard is used to ensure both package.json AND package-lock.json are copied
-# where available (npm@5+)
+# Copy source code in
 COPY . .
 
-# If you are building your code for production
+# Install and build
 RUN pnpm i --frozen-lockfile
 RUN pnpm build
-RUN rm -rf node_modules && RUN pnpm i --prod --frozen-lockfile 
+RUN rm -rf node_modules
 
 # --- Prod ---
 FROM node:18-alpine AS prod
@@ -26,7 +24,6 @@ RUN corepack enable && corepack prepare pnpm@latest --activate
 # copy app folder from previous image
 COPY --from=build /usr/src/app /usr/src/app
 
-# Bundle app source
-# COPY . .
+RUN pnpm i --prod --frozen-lockfile 
 
 CMD [ "pnpm", "start", "--port", "8787" ]
