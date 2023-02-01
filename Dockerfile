@@ -12,7 +12,8 @@ RUN corepack enable && corepack prepare pnpm@latest --activate
 COPY package.json pnpm-lock.yaml ./
 
 # If you are building your code for production
-RUN pnpm i && pnpm build
+RUN pnpm i --frozen-lockfile
+RUN pnpm build
 RUN rm -rf node_modules && RUN pnpm i --prod --frozen-lockfile 
 
 # --- Prod ---
