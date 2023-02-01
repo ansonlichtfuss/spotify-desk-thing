@@ -9,7 +9,7 @@ RUN corepack enable && corepack prepare pnpm@latest --activate
 # Install app dependencies
 # A wildcard is used to ensure both package.json AND package-lock.json are copied
 # where available (npm@5+)
-COPY package.json pnpm-lock.yaml ./
+COPY . .
 
 # If you are building your code for production
 RUN pnpm i --frozen-lockfile
@@ -27,6 +27,6 @@ RUN corepack enable && corepack prepare pnpm@latest --activate
 COPY --from=build /usr/src/app /usr/src/app
 
 # Bundle app source
-COPY . .
+# COPY . .
 
 CMD [ "pnpm", "start", "--port", "8787" ]
