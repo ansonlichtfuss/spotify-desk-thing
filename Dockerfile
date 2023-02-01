@@ -24,6 +24,7 @@ RUN corepack enable && corepack prepare pnpm@latest --activate
 # copy app folder from previous image
 COPY --from=build /usr/src/app /usr/src/app
 
+WORKDIR /usr/src/app
 RUN pnpm i --prod --frozen-lockfile 
 
 CMD [ "pnpm", "start", "--port", "8787" ]
