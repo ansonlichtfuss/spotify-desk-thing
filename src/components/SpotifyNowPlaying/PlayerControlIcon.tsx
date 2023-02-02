@@ -18,7 +18,7 @@ const PlayerControlIcon: Component<Props> = (props) => {
       onClick={props.onClick}
     >
       <img src={props.src} width={dimensions} height={dimensions} />
-      {props.showActiveIndicator && <span class="absolute -bottom-1 left-1/2 text-2xl w-2 h-3 -ml-2">&#x25CF;</span>}
+      {props.showActiveIndicator && <span class="absolute -bottom-4 left-1/2 bg-white rounded-full" style={{ width: "10px", height: "10px", "margin-left": "-5px" }}></span>}
     </button>
   );
 };
