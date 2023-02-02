@@ -25,13 +25,13 @@ import PlayerControlIcon from "./PlayerControlIcon";
 const PREVIEW_SIZE = 400;
 const DEFAULT_ACCENT_COLOR = '#111111';
 
-const getAlbumMetadata = ({ album }: { album: AlbumMetadata }) => ({
+const getAlbumMetadata = ({ album, name }: { album: AlbumMetadata, name: string }) => ({
   preview: album.images[0].url,
-  title: album.name,
+  title: name,
   subtitle: album.artists.map((artist) => artist.name).join(", "),
 });
 
-const getEpisodeMetadata = ({ episode }: { episode: EpisodeMetadata }) => ({
+const getEpisodeMetadata = (episode: EpisodeMetadata) => ({
   preview: episode.images[0].url,
   title: episode.name,
   subtitle: episode.show.name,
