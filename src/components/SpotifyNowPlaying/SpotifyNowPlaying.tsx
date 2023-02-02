@@ -53,6 +53,7 @@ const SpotifyNowPlaying: Component = () => {
     createSignal<SpotifyApi.CurrentPlaybackResponse>();
   const [nowPlayingProgressMs, setNowPlayingProgressMs] = createSignal(0);
   const [accentColor, setAccentColor] = createSignal(DEFAULT_ACCENT_COLOR);
+  const [manuallyDisableControls, setManuallyDisableControls] = createSignal(false);
 
   const getNowPlaying = async () => {
     const accessToken = await getToken();
@@ -61,22 +62,25 @@ const SpotifyNowPlaying: Component = () => {
     const response = await getSpotifyNowPlaying(accessToken);
     setNowPlaying(response);
     setNowPlayingProgressMs(response.progress_ms ?? 0);
+    setManuallyDisableControls(false);
   };
 
   const setPause = async () => {
+    setManuallyDisableControls(true);
     const accessToken = await getToken();
     if (!accessToken) return;
     
     const response = await setSpotifyPause(accessToken);
-    setTimeout(() => getNowPlaying(), 500);
+    setTimeout(() => getNowPlaying(), 100);
   };
 
   const setPlay = async () => {
+    setManuallyDisableControls(true);
     const accessToken = await getToken();
     if (!accessToken) return;
     
     const response = await setSpotifyPlay(accessToken);
-    setTimeout(() => getNowPlaying(), 500);
+    setTimeout(() => getNowPlaying(), 100);
   };
 
   // Now playing algorithm
@@ -116,12 +120,11 @@ const SpotifyNowPlaying: Component = () => {
     });
   });
 
-  const shouldDisableControls = createMemo(
-    () =>
-      nowPlaying() === undefined ||
-      !nowPlaying()?.device ||
-      nowPlaying()?.device?.is_restricted
-  );
+  const shouldDisableControls = createMemo(() =>
+    manuallyDisableControls() ||
+    nowPlaying() === undefined ||
+    !nowPlaying()?.device ||
+    nowPlaying()?.device?.is_restricted);
 
   const playingProgress = createMemo(
     () => nowPlayingProgressMs() / (nowPlaying()?.item?.duration_ms || 1)
