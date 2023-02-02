@@ -12,12 +12,12 @@ const PlayerControlIcon: Component<Props> = (props) => {
   const dimensions = props.enlargeIcon ? 72 : 48;
   return (
     <button
-      class={`hover:scale-125 relative ${!props.isDisabled ? "opacity-100" : "pointer-events-none opacity-25"
+      class={`group relative ${!props.isDisabled ? "opacity-100" : "pointer-events-none opacity-25"
         }`}
       disabled={props.isDisabled}
       onClick={props.onClick}
     >
-      <img src={props.src} width={dimensions} height={dimensions} />
+      <img class="group-hover:scale-105 " src={props.src} width={dimensions} height={dimensions} />
       {props.showActiveIndicator && <span class="absolute -bottom-4 left-1/2 bg-white rounded-full" style={{ width: "10px", height: "10px", "margin-left": "-5px" }}></span>}
     </button>
   );
