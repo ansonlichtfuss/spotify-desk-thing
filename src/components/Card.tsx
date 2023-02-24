@@ -1,17 +1,11 @@
-import { createVisibilityObserver } from "@solid-primitives/intersection-observer";
 import { children, Component, ParentProps } from "solid-js";
 
 export const CARD_SIZE = 715;
 
 const Card: Component<ParentProps> = (props) => {
-  let ref: HTMLDivElement;
-  const isVisible = createVisibilityObserver({ threshold: 0.5 })(
-    () => ref || undefined
-  );
 
   return (
     <div
-      ref={(el) => (ref = el)}
       class="relative bg-black text-white rounded-3xl overflow-hidden"
       style={{
         flex: "none",
@@ -21,7 +15,7 @@ const Card: Component<ParentProps> = (props) => {
         "scroll-snap-align": "center",
       }}
     >
-      {isVisible() && children(() => props.children)}
+      {children(() => props.children)}
     </div>
   );
 };

@@ -28,3 +28,7 @@ WORKDIR /usr/src/app
 RUN pnpm i --prod --frozen-lockfile 
 
 CMD [ "pnpm", "start", "--port", "8787" ]
+
+
+# docker build -t spotify-desk-thing/v2 --network host .
+# docker run -d --network=host --name=spotify-desk-thing --restart=unless-stopped spotify-desk-thing/v2
