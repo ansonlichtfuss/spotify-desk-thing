@@ -13,6 +13,7 @@ import {
   setSpotifyPlay,
 } from "~/utils/apiHelpers";
 import { useSpotifyAuth } from "../context/SpotifyAuthContext";
+import DynamicBackground from "./DynamicBackground";
 import SvgEmptyHeart from "./icons/bx-heart.svg";
 import SvgMusic from "./icons/bx-music.svg";
 import SvgPause from "./icons/bx-pause.svg";
@@ -23,7 +24,6 @@ import SvgSkipPrevious from "./icons/bx-skip-previous.svg";
 import PlayerControlIcon from "./PlayerControlIcon";
 
 const PREVIEW_SIZE = 400;
-const DEFAULT_ACCENT_COLOR = '#111111';
 
 const getAlbumMetadata = ({ album, name }: { album: AlbumMetadata, name: string }) => ({
   preview: album.images[0].url,
@@ -52,7 +52,6 @@ const SpotifyNowPlaying: Component = () => {
   const [nowPlaying, setNowPlaying] =
     createSignal<SpotifyApi.CurrentPlaybackResponse>();
   const [nowPlayingProgressMs, setNowPlayingProgressMs] = createSignal(0);
-  const [accentColor, setAccentColor] = createSignal(DEFAULT_ACCENT_COLOR);
   const [manuallyDisableControls, setManuallyDisableControls] = createSignal(false);
 
   const getNowPlaying = async () => {
@@ -141,41 +140,9 @@ const SpotifyNowPlaying: Component = () => {
     };
   });
 
-  const TARGET_LIGHTNESS = 0.3;
-  createEffect(() => {
-    if (metadata()?.preview) {
-      extractColors(metadata()?.preview, {
-        crossOrigin: "anonymous",
-        lightnessDistance: 0.1,
-      })
-        .then((colors) => {
-          let closestToDarkish = 10;
-          let bestIndex = 0;
-          colors.forEach((color, index) => {
-            const lightnessDifferent = Math.abs(
-              color.lightness - TARGET_LIGHTNESS
-            );
-            if (lightnessDifferent < closestToDarkish) {
-              closestToDarkish = lightnessDifferent;
-              bestIndex = index;
-            }
-          });
-          setAccentColor(colors[bestIndex].hex);
-        })
-        .catch(console.error);
-    } else {
-      setAccentColor(DEFAULT_ACCENT_COLOR);
-    }
-  });
 
   return (
-    <div
-      class="h-full w-full top-0 left-0 p-12 bg-black fixed text-white"
-      style={{
-        "background-color": `${accentColor()}`,
-        "font-family": "'Plus Jakarta SansVariable'",
-      }}
-    >
+    <DynamicBackground imgUrl={metadata()?.preview}>
       <div class="flex flex-col items-center">
         <div
           class="bg-gray-800 relative flex items-center justify-center color-gray-500"
@@ -259,7 +226,7 @@ const SpotifyNowPlaying: Component = () => {
           isDisabled={shouldDisableControls()}
         />
       </div>
-    </div>
+    </DynamicBackground>
   );
 };
 
