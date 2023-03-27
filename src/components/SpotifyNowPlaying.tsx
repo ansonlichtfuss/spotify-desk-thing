@@ -45,12 +45,9 @@ const SpotifyNowPlaying: Component = () => {
   // Now playing algorithm
   createEffect(() => {
     if (stateContext.nowPlaying === undefined) {
-      console.log('hey tiff get the now playing')
       getNowPlaying();
     }
   });
-
-  console.log('hey tiff root nowPlaying', stateContext.nowPlaying)
 
   createEffect(() => {
     let interval: number;
