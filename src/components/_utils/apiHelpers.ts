@@ -1,7 +1,7 @@
 const baseSpotifyApiUrl = `/api/v1/spotify`;
 const buildAuthUrl = (route: string) => `${baseSpotifyApiUrl}${route}`;
 
-export const getSpotifyAccessToken = async (): Promise<string> => {
+export const getSpotifyAccessToken = async (): Promise<any> => {
   const response = await fetch(`${baseSpotifyApiUrl}/access-token`);
   return await response.json();
 };

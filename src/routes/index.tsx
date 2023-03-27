@@ -1,13 +1,12 @@
-import { A } from "solid-start";
-import { SpotifyAuthProvider } from "~/components/context/SpotifyAuthContext";
-import SpotifyNowPlaying from "~/components/SpotifyNowPlaying/SpotifyNowPlaying";
+import { NowPlayingContextProvider } from "~/components/context/NowPlayingContext";
+import SpotifyNowPlaying from "~/components/SpotifyNowPlaying";
 
 const CARD_SIZE = 715;
 
 export default function Home() {
   return (
-    <main>
-      <SpotifyAuthProvider>
+    <NowPlayingContextProvider>
+      <main>
         <div class="flex items-center justify-center w-screen h-screen bg-black text-white">
           <div
             class="relative flex"
@@ -27,7 +26,7 @@ export default function Home() {
             </div>
           </div>
         </div>
-      </SpotifyAuthProvider>
-    </main>
+      </main>
+    </NowPlayingContextProvider>
   );
 }
