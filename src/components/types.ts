@@ -14,4 +14,5 @@ interface UiMetadata {
   preview: string;
   title: string;
   subtitle: string;
+  missingNowPlayingContext?: boolean;
 }
