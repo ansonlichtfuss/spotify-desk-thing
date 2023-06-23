@@ -18,7 +18,7 @@ interface PlayerControlsType {
 
 
 const PlayerControls: Component<PlayerControlsType> = (props) => {
-  const { setPause, setPlay, setPrevious, setNext } = useNowPlayingActionsContext();
+  const { setPause, setPlay, setPrevious, setNext, setShuffle } = useNowPlayingActionsContext();
 
   return (
     <div
@@ -41,6 +41,7 @@ const PlayerControls: Component<PlayerControlsType> = (props) => {
         src={SvgShuffle}
         isDisabled={props.disableControls}
         showActiveIndicator={props.enableShuffle}
+        onClick={setShuffle}
       />
       <PlayerControlIcon
         src={SvgSkipPrevious}

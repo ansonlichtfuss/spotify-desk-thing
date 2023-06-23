@@ -57,3 +57,15 @@ export const setSpotifyNext = async (access_token: string) => {
   });
   return await response.json();
 };
+
+export const setSpotifyShuffle = async (access_token: string, state: boolean) => {
+  const response = await fetch(buildAuthUrl(`/shuffle`) + `?` + new URLSearchParams({
+    state: state ? 'true' : 'false'
+  }), {
+    method: "PUT",
+    headers: new Headers({
+      Authorization: `Bearer ${access_token}`,
+    }),
+  });
+  return await response.json();
+};

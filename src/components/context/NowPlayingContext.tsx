@@ -6,7 +6,8 @@ import {
   setSpotifyNext,
   setSpotifyPause,
   setSpotifyPlay,
-  setSpotifyPrevious
+  setSpotifyPrevious,
+  setSpotifyShuffle
 } from "../_utils/apiHelpers";
 
 
@@ -22,6 +23,7 @@ type NowPlayingContextType = {
     setPlay: () => Promise<void>;
     setPrevious: () => Promise<void>;
     setNext: () => Promise<void>;
+    setShuffle: () => Promise<void>;
     setNowPlayingProgressMs: (callbackMs: (current: number) => number) => void;
   }
 };
@@ -40,6 +42,7 @@ const NowPlayingActionsContext = createContext<NowPlayingContextType['actions']>
   setPlay: () => Promise.resolve(),
   setPrevious: () => Promise.resolve(),
   setNext: () => Promise.resolve(),
+  setShuffle: () => Promise.resolve(),
   setNowPlayingProgressMs: (cb) => cb(0)
 });
 
@@ -95,13 +98,22 @@ export const NowPlayingContextProvider: ParentComponent = (props) => {
     setTimeout(() => getNowPlaying(), 100);
   }
 
+  const setShuffle = async () => {
+    setState({ manuallyDisableControls: true })
+    const accessToken = await getToken();
+    if (!accessToken) return;
+    
+    const response = await setSpotifyShuffle(accessToken, !state.nowPlaying?.shuffle_state);
+    setTimeout(() => getNowPlaying(), 100);
+  }
+
   const setNowPlayingProgressMs = (callbackMs: (current: number) => number) => {
     setState(current => ({ nowPlayingProgressMs: callbackMs(current.nowPlayingProgressMs) }))
   }
 
   return (
     <NowPlayingStateContext.Provider value={state}>
-      <NowPlayingActionsContext.Provider value={{ getNowPlaying, setPause, setPlay, setPrevious, setNext, setNowPlayingProgressMs }}>
+      <NowPlayingActionsContext.Provider value={{ getNowPlaying, setPause, setPlay, setPrevious, setNext, setShuffle, setNowPlayingProgressMs }}>
         {children(() => props.children)()}
       </NowPlayingActionsContext.Provider>
     </NowPlayingStateContext.Provider>
