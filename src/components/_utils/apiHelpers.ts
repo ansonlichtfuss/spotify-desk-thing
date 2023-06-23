@@ -37,3 +37,23 @@ export const setSpotifyPlay = async (access_token: string) => {
   });
   return await response.json();
 };
+
+export const setSpotifyPrevious = async (access_token: string) => {
+  const response = await fetch(buildAuthUrl(`/previous`), {
+    method: "POST",
+    headers: new Headers({
+      Authorization: `Bearer ${access_token}`,
+    }),
+  });
+  return await response.json();
+};
+
+export const setSpotifyNext = async (access_token: string) => {
+  const response = await fetch(buildAuthUrl(`/next`), {
+    method: "POST",
+    headers: new Headers({
+      Authorization: `Bearer ${access_token}`,
+    }),
+  });
+  return await response.json();
+};

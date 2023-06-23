@@ -3,8 +3,10 @@ import { createStore } from "solid-js/store";
 import { useSpotifyAuth } from "../hooks/useSpotifyAuth";
 import {
   getSpotifyNowPlaying,
+  setSpotifyNext,
   setSpotifyPause,
-  setSpotifyPlay
+  setSpotifyPlay,
+  setSpotifyPrevious
 } from "../_utils/apiHelpers";
 
 
@@ -18,6 +20,8 @@ type NowPlayingContextType = {
     getNowPlaying: () => Promise<void>;
     setPause: () => Promise<void>;
     setPlay: () => Promise<void>;
+    setPrevious: () => Promise<void>;
+    setNext: () => Promise<void>;
     setNowPlayingProgressMs: (callbackMs: (current: number) => number) => void;
   }
 };
@@ -34,6 +38,8 @@ const NowPlayingActionsContext = createContext<NowPlayingContextType['actions']>
   getNowPlaying: () => Promise.resolve(),
   setPause: () => Promise.resolve(),
   setPlay: () => Promise.resolve(),
+  setPrevious: () => Promise.resolve(),
+  setNext: () => Promise.resolve(),
   setNowPlayingProgressMs: (cb) => cb(0)
 });
 
@@ -71,13 +77,31 @@ export const NowPlayingContextProvider: ParentComponent = (props) => {
     setTimeout(() => getNowPlaying(), 100);
   };
 
+  const setPrevious = async () => {
+    setState({ manuallyDisableControls: true })
+    const accessToken = await getToken();
+    if (!accessToken) return;
+    
+    const response = await setSpotifyPrevious(accessToken);
+    setTimeout(() => getNowPlaying(), 100);
+  }
+
+  const setNext = async () => {
+    setState({ manuallyDisableControls: true })
+    const accessToken = await getToken();
+    if (!accessToken) return;
+    
+    const response = await setSpotifyNext(accessToken);
+    setTimeout(() => getNowPlaying(), 100);
+  }
+
   const setNowPlayingProgressMs = (callbackMs: (current: number) => number) => {
     setState(current => ({ nowPlayingProgressMs: callbackMs(current.nowPlayingProgressMs) }))
   }
 
   return (
     <NowPlayingStateContext.Provider value={state}>
-      <NowPlayingActionsContext.Provider value={{ getNowPlaying, setPause, setPlay, setNowPlayingProgressMs }}>
+      <NowPlayingActionsContext.Provider value={{ getNowPlaying, setPause, setPlay, setPrevious, setNext, setNowPlayingProgressMs }}>
         {children(() => props.children)()}
       </NowPlayingActionsContext.Provider>
     </NowPlayingStateContext.Provider>

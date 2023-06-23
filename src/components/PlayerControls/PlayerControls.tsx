@@ -18,7 +18,7 @@ interface PlayerControlsType {
 
 
 const PlayerControls: Component<PlayerControlsType> = (props) => {
-  const { setPause, setPlay } = useNowPlayingActionsContext();
+  const { setPause, setPlay, setPrevious, setNext } = useNowPlayingActionsContext();
 
   return (
     <div
@@ -46,6 +46,7 @@ const PlayerControls: Component<PlayerControlsType> = (props) => {
         src={SvgSkipPrevious}
         isDisabled={props.disableControls}
         enlargeIcon={true}
+        onClick={setPrevious}
       />
       {props.isPlaying ? (
         <PlayerControlIcon
@@ -66,6 +67,7 @@ const PlayerControls: Component<PlayerControlsType> = (props) => {
         src={SvgSkipNext}
         isDisabled={props.disableControls}
         enlargeIcon={true}
+        onClick={setNext}
       />
       <PlayerControlIcon
         src={SvgEmptyHeart}

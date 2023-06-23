@@ -14,7 +14,7 @@ const Screensaver: Component = (props) => {
     <div
       class="w-full h-full bg-black flex items-center justify-center"
     >
-      <img class="opacity-50" src={SvgSpotifyWhite} width={"100"} height={"100"} />
+      <img class="opacity-50" src={SvgSpotifyWhite} width={"250"} height={"250"} />
     </div>
   );
 };
