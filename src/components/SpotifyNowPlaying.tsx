@@ -161,7 +161,7 @@ const SpotifyNowPlaying: Component = () => {
               isPlaying={!!stateContext.nowPlaying?.is_playing}
               disableControls={shouldDisableControls()}
               enableShuffle={!!stateContext.nowPlaying?.shuffle_state}
-              enableSaved={false} // TODO
+              isSaved={!!stateContext.isTrackSaved}
             />
           </DynamicBackground>
         )

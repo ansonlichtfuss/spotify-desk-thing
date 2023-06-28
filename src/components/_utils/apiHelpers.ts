@@ -69,3 +69,15 @@ export const setSpotifyShuffle = async (access_token: string, state: boolean) =>
   });
   return await response.json();
 };
+
+export const getSpotifySaved = async (access_token: string, id: string) => {
+  const response = await fetch(buildAuthUrl(`/saved`) + `?` + new URLSearchParams({
+    ids: `${id}`
+  }), {
+    method: "GET",
+    headers: new Headers({
+      Authorization: `Bearer ${access_token}`,
+    }),
+  });
+  return await response.json();
+};

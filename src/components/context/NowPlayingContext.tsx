@@ -3,6 +3,7 @@ import { createStore } from "solid-js/store";
 import { useSpotifyAuth } from "../hooks/useSpotifyAuth";
 import {
   getSpotifyNowPlaying,
+  getSpotifySaved,
   setSpotifyNext,
   setSpotifyPause,
   setSpotifyPlay,
@@ -16,6 +17,7 @@ type NowPlayingContextType = {
     nowPlaying: SpotifyApi.CurrentPlaybackResponse | undefined;
     nowPlayingProgressMs: number;
     manuallyDisableControls: boolean;
+    isTrackSaved: boolean;
   },
   actions: {
     getNowPlaying: () => Promise<void>;
@@ -24,6 +26,7 @@ type NowPlayingContextType = {
     setPrevious: () => Promise<void>;
     setNext: () => Promise<void>;
     setShuffle: () => Promise<void>;
+    getSaved: (id: string) => Promise<void>;
     setNowPlayingProgressMs: (callbackMs: (current: number) => number) => void;
   }
 };
@@ -31,7 +34,8 @@ type NowPlayingContextType = {
 const defaultState: NowPlayingContextType['state'] = {
   nowPlaying: undefined,
   nowPlayingProgressMs: 0,
-  manuallyDisableControls: false
+  manuallyDisableControls: false,
+  isTrackSaved: false
 };
 
 const NowPlayingStateContext = createContext<NowPlayingContextType['state']>(defaultState);
@@ -43,6 +47,7 @@ const NowPlayingActionsContext = createContext<NowPlayingContextType['actions']>
   setPrevious: () => Promise.resolve(),
   setNext: () => Promise.resolve(),
   setShuffle: () => Promise.resolve(),
+  getSaved: () => Promise.resolve(),
   setNowPlayingProgressMs: (cb) => cb(0)
 });
 
@@ -55,6 +60,11 @@ export const NowPlayingContextProvider: ParentComponent = (props) => {
     if (!accessToken) return;
 
     const response = await getSpotifyNowPlaying(accessToken);
+
+    if (response.item?.id && response.item?.id !== state.nowPlaying?.item?.id) {
+      getSaved(response.item?.id);
+    }
+
     setState({
       nowPlaying: response,
       nowPlayingProgressMs: response.progress_ms ?? 0,
@@ -107,13 +117,22 @@ export const NowPlayingContextProvider: ParentComponent = (props) => {
     setTimeout(() => getNowPlaying(), 100);
   }
 
+  const getSaved = async (id: string) => {
+    setState({ manuallyDisableControls: true })
+    const accessToken = await getToken();
+    if (!accessToken) return;
+    
+    const response = await getSpotifySaved(accessToken, id);
+    setState({ isTrackSaved: !!response[0] })
+  }
+
   const setNowPlayingProgressMs = (callbackMs: (current: number) => number) => {
     setState(current => ({ nowPlayingProgressMs: callbackMs(current.nowPlayingProgressMs) }))
   }
 
   return (
     <NowPlayingStateContext.Provider value={state}>
-      <NowPlayingActionsContext.Provider value={{ getNowPlaying, setPause, setPlay, setPrevious, setNext, setShuffle, setNowPlayingProgressMs }}>
+      <NowPlayingActionsContext.Provider value={{ getNowPlaying, setPause, setPlay, setPrevious, setNext, setShuffle, getSaved, setNowPlayingProgressMs }}>
         {children(() => props.children)()}
       </NowPlayingActionsContext.Provider>
     </NowPlayingStateContext.Provider>

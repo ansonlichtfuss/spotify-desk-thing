@@ -17,9 +17,7 @@ export async function PUT({ request }: APIEvent) {
   if (response.status === 200 || response.status === 204) {
     return json({});
   } else {
-    console.log("previous error", `${SHUFFLE_ENDPOINT}?` + new URLSearchParams({
-      state: params.state
-    }), response);
+    console.log("previous error", response);
     return json("an error happened and its a bummer");
   }
 }

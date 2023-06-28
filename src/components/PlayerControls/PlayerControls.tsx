@@ -1,5 +1,6 @@
 import { Component } from "solid-js";
 import SvgEmptyHeart from "../icons/bx-heart.svg";
+import SvgSolidHeart from "../icons/bxs-heart.svg";
 import SvgPause from "../icons/bx-pause.svg";
 import SvgPlay from "../icons/bx-play.svg";
 import SvgShuffle from "../icons/bx-shuffle.svg";
@@ -11,9 +12,9 @@ import { useNowPlayingActionsContext } from "../context/NowPlayingContext";
 interface PlayerControlsType {
   playingProgressPercent: number;
   isPlaying: boolean;
+  isSaved: boolean;
   disableControls: boolean;
   enableShuffle: boolean;
-  enableSaved: boolean;
 }
 
 
@@ -71,7 +72,7 @@ const PlayerControls: Component<PlayerControlsType> = (props) => {
         onClick={setNext}
       />
       <PlayerControlIcon
-        src={SvgEmptyHeart}
+        src={props.isSaved ? SvgSolidHeart : SvgEmptyHeart}
         isDisabled={props.disableControls}
       />
     </div>
