@@ -6,9 +6,6 @@ const SAVED_ENDPOINT = `https://api.spotify.com/v1/me/tracks/contains`;
 export async function GET({ request }: APIEvent) {
   const searchParams = (new URL(request.url)).searchParams;
 
-  console.log('hey tiff', `${SAVED_ENDPOINT}?` + new URLSearchParams({
-    ids: `${searchParams.get('ids')}`
-  }));
   const response = await fetch(`${SAVED_ENDPOINT}?` + new URLSearchParams({
     ids: `${searchParams.get('ids')}`
   }), {
