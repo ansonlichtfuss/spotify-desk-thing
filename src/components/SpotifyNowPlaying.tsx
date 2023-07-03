@@ -1,13 +1,15 @@
 import {
   Component,
   createEffect,
-  createMemo, createSignal, onCleanup
+  createMemo,
+  createSignal,
+  onCleanup,
 } from "solid-js";
-import { useNowPlayingActionsContext, useNowPlayingStateContext } from "./context/NowPlayingContext";
+import { trpc } from "~/utils/trpc";
 import DynamicBackground from "./DynamicBackground";
-import SvgMusic from "./icons/bx-music.svg";
 import PlayerControls from "./PlayerControls/PlayerControls";
 import Screensaver from "./Screensaver";
+import SvgMusic from "./icons/bx-music.svg";
 
 const PREVIEW_SIZE = 400;
 
@@ -40,21 +42,18 @@ const metadataMappers: Record<
 };
 
 const SpotifyNowPlaying: Component = () => {
-  const stateContext = useNowPlayingStateContext();
-  const { getNowPlaying, setNowPlayingProgressMs, setPause, setPlay } = useNowPlayingActionsContext();
   const [showScreensaver, setShowScreensaver] = createSignal(true);
-
-  // Now playing algorithm
-  createEffect(() => {
-    if (stateContext.nowPlaying === undefined) {
-      getNowPlaying();
-    }
-  });
+  const nowPlayingQuery = trpc.metadata.nowPlaying.useQuery();
+  const isSavedQuery = trpc.metadata.saved.useQuery(
+    () => ({ ids: [nowPlayingQuery.data?.item?.id || ""] }),
+    () => ({
+      enabled: !!nowPlayingQuery.data?.item?.id,
+    })
+  );
 
   createEffect(() => {
     let interval: number;
-    let progressInterval: number;
-    const thisNowPlaying = stateContext.nowPlaying;
+    const thisNowPlaying = nowPlayingQuery.data;
     if (thisNowPlaying !== undefined) {
       let refreshTimeout = thisNowPlaying?.is_playing ? 8000 : 15000;
 
@@ -66,38 +65,22 @@ const SpotifyNowPlaying: Component = () => {
         refreshTimeout = timeLeftOnSong + 1000;
       }
 
-      interval = setInterval(() => getNowPlaying(), refreshTimeout);
-      if (thisNowPlaying?.is_playing) {
-        progressInterval = setInterval(
-          () => setNowPlayingProgressMs((current) => current + 1000),
-          1000
-        );
-      }
+      interval = setInterval(() => nowPlayingQuery.refetch(), refreshTimeout);
     }
 
     onCleanup(() => {
       clearInterval(interval);
-      clearInterval(progressInterval);
     });
   });
 
-  const shouldDisableControls = createMemo(
-    () =>
-      stateContext.manuallyDisableControls ||
-      stateContext.nowPlaying === undefined ||
-      !stateContext.nowPlaying?.device ||
-      stateContext.nowPlaying?.device?.is_restricted
-  );
-
-  const playingProgress = createMemo(
-    () => stateContext.nowPlayingProgressMs / (stateContext.nowPlaying?.item?.duration_ms || 1)
-  );
-
   const metadata = createMemo<UiMetadata>(() => {
-    const mapperKey = stateContext.nowPlaying?.currently_playing_type ?? "track";
+    const mapperKey = nowPlayingQuery.data?.currently_playing_type ?? "track";
     const mapper = metadataMappers[mapperKey];
 
-    const mapAttempt = mapper && stateContext.nowPlaying?.item && mapper(stateContext.nowPlaying?.item);
+    const mapAttempt =
+      mapper &&
+      nowPlayingQuery.data?.item &&
+      mapper(nowPlayingQuery.data?.item);
 
     if (!mapAttempt) {
       setShowScreensaver(true);
@@ -109,7 +92,7 @@ const SpotifyNowPlaying: Component = () => {
       };
     } else {
       if (showScreensaver()) {
-        setShowScreensaver(false)
+        setShowScreensaver(false);
       }
       return mapAttempt;
     }
@@ -117,55 +100,48 @@ const SpotifyNowPlaying: Component = () => {
 
   return (
     <div class="w-full h-full">
-      {showScreensaver() ? 
-        <Screensaver /> : 
-        (
-          <DynamicBackground imgUrl={metadata()?.preview}>
-            <div class="flex flex-col items-center">
+      {showScreensaver() ? (
+        <Screensaver />
+      ) : (
+        <DynamicBackground imgUrl={metadata()?.preview}>
+          <div class="flex flex-col items-center">
+            <div
+              class="bg-gray-800 relative flex items-center justify-center color-gray-500"
+              style={{
+                width: `${PREVIEW_SIZE}px`,
+                height: `${PREVIEW_SIZE}px`,
+              }}
+            >
+              <div class="absolute z-0">
+                <img
+                  src={SvgMusic}
+                  width={`${PREVIEW_SIZE / 2}px`}
+                  height={`${PREVIEW_SIZE / 2}px`}
+                />
+              </div>
               <div
-                class="bg-gray-800 relative flex items-center justify-center color-gray-500"
+                class="relative z-10"
                 style={{
                   width: `${PREVIEW_SIZE}px`,
                   height: `${PREVIEW_SIZE}px`,
+                  "background-image": `url(${metadata()?.preview})`,
+                  "background-position": "center center",
+                  "background-repeat": "no-repeat",
+                  "background-size": "contain",
                 }}
-              >
-                <div class="absolute z-0">
-                  <img
-                    src={SvgMusic}
-                    width={`${PREVIEW_SIZE / 2}px`}
-                    height={`${PREVIEW_SIZE / 2}px`}
-                  />
-                </div>
-                <div
-                  class="relative z-10"
-                  style={{
-                    width: `${PREVIEW_SIZE}px`,
-                    height: `${PREVIEW_SIZE}px`,
-                    "background-image": `url(${metadata()?.preview})`,
-                    "background-position": "center center",
-                    "background-repeat": "no-repeat",
-                    "background-size": "contain",
-                  }}
-                />
-              </div>
-              <p class="font-extrabold text-5xl pt-7 pb-2 text-ellipsis overflow-hidden whitespace-nowrap max-w-xl leading-lg">
-                {metadata()?.title}
-              </p>
-              <p class="opacity-75 text-2xl font-bold text-ellipsis overflow-hidden whitespace-nowrap max-w-xl">
-                {metadata()?.subtitle}
-              </p>
+              />
             </div>
+            <p class="font-extrabold text-5xl pt-7 pb-2 text-ellipsis overflow-hidden whitespace-nowrap max-w-xl leading-lg">
+              {metadata()?.title}
+            </p>
+            <p class="opacity-75 text-2xl font-bold text-ellipsis overflow-hidden whitespace-nowrap max-w-xl">
+              {metadata()?.subtitle}
+            </p>
+          </div>
 
-            <PlayerControls 
-              playingProgressPercent={playingProgress()}
-              isPlaying={!!stateContext.nowPlaying?.is_playing}
-              disableControls={shouldDisableControls()}
-              enableShuffle={!!stateContext.nowPlaying?.shuffle_state}
-              isSaved={!!stateContext.isTrackSaved}
-            />
-          </DynamicBackground>
-        )
-      }
+          <PlayerControls isSaved={!!isSavedQuery.data?.[0]} />
+        </DynamicBackground>
+      )}
     </div>
   );
 };

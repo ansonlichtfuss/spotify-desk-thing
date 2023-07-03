@@ -1,16 +1,10 @@
-import { createContext, useContext, ParentComponent, children } from "solid-js";
-import { createStore } from "solid-js/store";
 import add from "date-fns/add";
+import differenceInSeconds from "date-fns/differenceInSeconds";
 import isAfter from "date-fns/isAfter";
-import { getSpotifyAccessToken } from "../_utils/apiHelpers";
-
-type SpotifyAuthState = {
-  access_token: string;
-  token_type: string;
-  expires_in: number;
-  scope: string;
-  calculatedExpiration: Date;
-};
+import { createEffect, createSignal } from "solid-js";
+import { createStore } from "solid-js/store";
+import { SpotifyAuthState } from "~/server/trpc/router/auth";
+import { trpc } from "~/utils/trpc";
 
 const defaultState = {
   access_token: "",
@@ -18,26 +12,38 @@ const defaultState = {
   expires_in: 0,
   scope: "",
   calculatedExpiration: new Date(),
+  timerReference: -1,
 };
+
+export const [getAuthTokenSignal, setAuthTokenSignal] = createSignal("");
 
 export const useSpotifyAuth = () => {
   const [state, setState] = createStore<SpotifyAuthState>(defaultState);
+  const accessTokenQuery = trpc.auth.accessToken.useQuery();
 
-  const getToken = async () => {
-    if (!isAfter(new Date(), state.calculatedExpiration)) {
-      return state.access_token;
+  createEffect(() => {
+    let timerReference = -1;
+    if (accessTokenQuery.isSuccess && accessTokenQuery.data) {
+      setAuthTokenSignal(accessTokenQuery.data.access_token);
+
+      const calculatedExpiration = add(new Date(), {
+        seconds: accessTokenQuery.data.expires_in - 600,
+      });
+      const diffSec = differenceInSeconds(calculatedExpiration, new Date());
+      timerReference = setTimeout(
+        () => accessTokenQuery.refetch(),
+        diffSec * 1000
+      );
     }
 
-    const response: SpotifyAuthState = await getSpotifyAccessToken();
-    setState({
-      ...response,
-      calculatedExpiration: add(new Date(), {
-        seconds: response.expires_in - 600,
-      }),
-    });
+    return () => {
+      clearTimeout(timerReference);
+    };
+  });
 
-    return response.access_token;
+  return {
+    authToken: () => accessTokenQuery.data?.access_token,
+    isLoading: () => accessTokenQuery.isLoading,
+    accessTokenQuery,
   };
-
-  return { getToken };
 };

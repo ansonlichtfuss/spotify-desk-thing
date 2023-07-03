@@ -10,16 +10,18 @@ import {
   setSpotifyPrevious,
   setSpotifyShuffle
 } from "../_utils/apiHelpers";
+import { trpc } from "~/utils/trpc";
 
 
 type NowPlayingContextType = {
   state: {
     nowPlaying: SpotifyApi.CurrentPlaybackResponse | undefined;
     nowPlayingProgressMs: number;
-    manuallyDisableControls: boolean;
+    // manuallyDisableControls: boolean;
     isTrackSaved: boolean;
   },
   actions: {
+    nowPlayingQuery: typeof trpc.metadata.nowPlaying;
     getNowPlaying: () => Promise<void>;
     setPause: () => Promise<void>;
     setPlay: () => Promise<void>;
@@ -34,94 +36,58 @@ type NowPlayingContextType = {
 const defaultState: NowPlayingContextType['state'] = {
   nowPlaying: undefined,
   nowPlayingProgressMs: 0,
-  manuallyDisableControls: false,
+  // manuallyDisableControls: false,
   isTrackSaved: false
 };
 
 const NowPlayingStateContext = createContext<NowPlayingContextType['state']>(defaultState);
 
-const NowPlayingActionsContext = createContext<NowPlayingContextType['actions']>({
-  getNowPlaying: () => Promise.resolve(),
-  setPause: () => Promise.resolve(),
-  setPlay: () => Promise.resolve(),
-  setPrevious: () => Promise.resolve(),
-  setNext: () => Promise.resolve(),
-  setShuffle: () => Promise.resolve(),
-  getSaved: () => Promise.resolve(),
-  setNowPlayingProgressMs: (cb) => cb(0)
-});
+const NowPlayingActionsContext = createContext();
 
 export const NowPlayingContextProvider: ParentComponent = (props) => {
   const [state, setState] = createStore(defaultState);
-  const { getToken } = useSpotifyAuth();
+  const nowPlayingQuery = trpc.metadata.nowPlaying.useQuery();
 
-  const getNowPlaying = async () => {
-    const accessToken = await getToken();
-    if (!accessToken) return;
+  // const getNowPlaying = async () => {
+  //   const response = await getSpotifyNowPlaying(accessToken);
 
-    const response = await getSpotifyNowPlaying(accessToken);
+  //   if (response.item?.id && response.item?.id !== state.nowPlaying?.item?.id) {
+  //     getSaved(response.item?.id);
+  //   }
 
-    if (response.item?.id && response.item?.id !== state.nowPlaying?.item?.id) {
-      getSaved(response.item?.id);
-    }
-
-    setState({
-      nowPlaying: response,
-      nowPlayingProgressMs: response.progress_ms ?? 0,
-      manuallyDisableControls: false
-    })
-  };
+  //   setState({
+  //     nowPlaying: response,
+  //     nowPlayingProgressMs: response.progress_ms ?? 0,
+  //     manuallyDisableControls: false
+  //   })
+  // };
 
   const setPause = async () => {
-    setState({ manuallyDisableControls: true })
-    const accessToken = await getToken();
-    if (!accessToken) return;
-    
     const response = await setSpotifyPause(accessToken);
-    setTimeout(() => getNowPlaying(), 100);
+    setTimeout(() => nowPlayingQuery.refetch(), 100);
   };
 
   const setPlay = async () => {
-    setState({ manuallyDisableControls: true })
-    const accessToken = await getToken();
-    if (!accessToken) return;
-    
     const response = await setSpotifyPlay(accessToken);
-    setTimeout(() => getNowPlaying(), 100);
+    setTimeout(() => nowPlayingQuery.refetch(), 100);
   };
 
   const setPrevious = async () => {
-    setState({ manuallyDisableControls: true })
-    const accessToken = await getToken();
-    if (!accessToken) return;
-    
     const response = await setSpotifyPrevious(accessToken);
-    setTimeout(() => getNowPlaying(), 100);
+    setTimeout(() => nowPlayingQuery.refetch(), 100);
   }
 
   const setNext = async () => {
-    setState({ manuallyDisableControls: true })
-    const accessToken = await getToken();
-    if (!accessToken) return;
-    
     const response = await setSpotifyNext(accessToken);
-    setTimeout(() => getNowPlaying(), 100);
+    setTimeout(() => nowPlayingQuery.refetch(), 100);
   }
 
   const setShuffle = async () => {
-    setState({ manuallyDisableControls: true })
-    const accessToken = await getToken();
-    if (!accessToken) return;
-    
     const response = await setSpotifyShuffle(accessToken, !state.nowPlaying?.shuffle_state);
-    setTimeout(() => getNowPlaying(), 100);
+    setTimeout(() => nowPlayingQuery.refetch(), 100);
   }
 
   const getSaved = async (id: string) => {
-    setState({ manuallyDisableControls: true })
-    const accessToken = await getToken();
-    if (!accessToken) return;
-    
     const response = await getSpotifySaved(accessToken, id);
     setState({ isTrackSaved: !!response[0] })
   }
@@ -132,7 +98,7 @@ export const NowPlayingContextProvider: ParentComponent = (props) => {
 
   return (
     <NowPlayingStateContext.Provider value={state}>
-      <NowPlayingActionsContext.Provider value={{ getNowPlaying, setPause, setPlay, setPrevious, setNext, setShuffle, getSaved, setNowPlayingProgressMs }}>
+      <NowPlayingActionsContext.Provider value={{ nowPlayingQuery, setPause, setPlay, setPrevious, setNext, setShuffle, getSaved, setNowPlayingProgressMs }}>
         {children(() => props.children)()}
       </NowPlayingActionsContext.Provider>
     </NowPlayingStateContext.Provider>

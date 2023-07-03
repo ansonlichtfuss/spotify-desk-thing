@@ -1,25 +1,39 @@
-import { Component } from "solid-js";
+import { Component, createMemo } from "solid-js";
+import { trpc } from "~/utils/trpc";
 import SvgEmptyHeart from "../icons/bx-heart.svg";
-import SvgSolidHeart from "../icons/bxs-heart.svg";
 import SvgPause from "../icons/bx-pause.svg";
 import SvgPlay from "../icons/bx-play.svg";
 import SvgShuffle from "../icons/bx-shuffle.svg";
 import SvgSkipNext from "../icons/bx-skip-next.svg";
 import SvgSkipPrevious from "../icons/bx-skip-previous.svg";
+import SvgSolidHeart from "../icons/bxs-heart.svg";
 import PlayerControlIcon from "./PlayerControlIcon";
-import { useNowPlayingActionsContext } from "../context/NowPlayingContext";
+import PlayerProgressBar from "./PlayerProgressBar";
 
 interface PlayerControlsType {
-  playingProgressPercent: number;
-  isPlaying: boolean;
   isSaved: boolean;
-  disableControls: boolean;
-  enableShuffle: boolean;
 }
 
-
 const PlayerControls: Component<PlayerControlsType> = (props) => {
-  const { setPause, setPlay, setPrevious, setNext, setShuffle } = useNowPlayingActionsContext();
+  const nowPlaying = trpc.metadata.nowPlaying.useQuery();
+  const shouldDisableControls = createMemo(
+    () =>
+      nowPlaying.data === undefined ||
+      !nowPlaying.data?.device ||
+      nowPlaying.data?.device?.is_restricted
+  );
+
+  const utils = trpc.useContext();
+  const onSuccessMutator = () => ({
+    onSuccess: () => {
+      utils.metadata.nowPlaying.invalidate();
+    },
+  });
+  const setShuffle = trpc.actions.shuffle.useMutation(onSuccessMutator);
+  const setPrevious = trpc.actions.previous.useMutation(onSuccessMutator);
+  const setPause = trpc.actions.pause.useMutation(onSuccessMutator);
+  const setPlay = trpc.actions.play.useMutation(onSuccessMutator);
+  const setNext = trpc.actions.next.useMutation(onSuccessMutator);
 
   return (
     <div
@@ -30,50 +44,43 @@ const PlayerControls: Component<PlayerControlsType> = (props) => {
         "align-items": "center",
       }}
     >
-      <div
-        class="absolute top-0 left-0 w-0 w-full origin-left"
-        style={{ height: "3px", "background-color": "rgba(0,0,0,0.2)" }}
-      ></div>
-      <div
-        class="absolute top-0 left-0 w-0 w-full scale-x-0 origin-left bg-white"
-        style={{ height: "3px", transform: `scaleX(${props.playingProgressPercent})` }}
-      ></div>
+      <PlayerProgressBar />
       <PlayerControlIcon
         src={SvgShuffle}
-        isDisabled={props.disableControls}
-        showActiveIndicator={props.enableShuffle}
-        onClick={setShuffle}
+        isDisabled={shouldDisableControls()}
+        showActiveIndicator={nowPlaying.data?.shuffle_state}
+        onClick={() => setShuffle.mutate({ state: !nowPlaying.data?.shuffle_state })}
       />
       <PlayerControlIcon
         src={SvgSkipPrevious}
-        isDisabled={props.disableControls}
+        isDisabled={shouldDisableControls()}
         enlargeIcon={true}
-        onClick={setPrevious}
+        onClick={setPrevious.mutate}
       />
-      {props.isPlaying ? (
+      {nowPlaying.data?.is_playing ? (
         <PlayerControlIcon
           src={SvgPause}
-          isDisabled={props.disableControls}
+          isDisabled={shouldDisableControls()}
           enlargeIcon={true}
-          onClick={setPause}
+          onClick={setPause.mutate}
         />
       ) : (
         <PlayerControlIcon
           src={SvgPlay}
-          isDisabled={props.disableControls}
+          isDisabled={shouldDisableControls()}
           enlargeIcon={true}
-          onClick={setPlay}
+          onClick={setPlay.mutate}
         />
       )}
       <PlayerControlIcon
         src={SvgSkipNext}
-        isDisabled={props.disableControls}
+        isDisabled={shouldDisableControls()}
         enlargeIcon={true}
-        onClick={setNext}
+        onClick={setNext.mutate}
       />
       <PlayerControlIcon
         src={props.isSaved ? SvgSolidHeart : SvgEmptyHeart}
-        isDisabled={props.disableControls}
+        isDisabled={shouldDisableControls()}
       />
     </div>
   );
