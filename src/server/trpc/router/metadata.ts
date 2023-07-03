@@ -24,6 +24,10 @@ export default router({
         });
       }
 
+      if (status === 204) {
+        return { is_playing: false } as SpotifyApi.CurrentPlaybackResponse;
+      }
+
       return (await res.json()) as SpotifyApi.CurrentPlaybackResponse;
     } catch (e) {
       console.log("nowPlaying error", e);

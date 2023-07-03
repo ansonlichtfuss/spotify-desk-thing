@@ -42,6 +42,7 @@ const metadataMappers: Record<
 };
 
 const SpotifyNowPlaying: Component = () => {
+  const utils = trpc.useContext();
   const [showScreensaver, setShowScreensaver] = createSignal(true);
   const nowPlayingQuery = trpc.metadata.nowPlaying.useQuery();
   const isSavedQuery = trpc.metadata.saved.useQuery(
@@ -52,10 +53,10 @@ const SpotifyNowPlaying: Component = () => {
   );
 
   createEffect(() => {
-    let interval: number;
     const thisNowPlaying = nowPlayingQuery.data;
+    let interval: number;
+    let refreshTimeout = !!thisNowPlaying?.is_playing ? 8000 : 15000;
     if (thisNowPlaying !== undefined) {
-      let refreshTimeout = thisNowPlaying?.is_playing ? 8000 : 15000;
 
       const songDuration = thisNowPlaying?.item?.duration_ms ?? 0;
       const currentProgress = thisNowPlaying?.progress_ms ?? 0;
@@ -65,8 +66,9 @@ const SpotifyNowPlaying: Component = () => {
         refreshTimeout = timeLeftOnSong + 1000;
       }
 
-      interval = setInterval(() => nowPlayingQuery.refetch(), refreshTimeout);
     }
+
+    interval = setInterval(() => utils.metadata.nowPlaying.invalidate(), refreshTimeout);
 
     onCleanup(() => {
       clearInterval(interval);
