@@ -6,11 +6,12 @@ WORKDIR /usr/src/app
 # Add pnpm
 RUN corepack enable && corepack prepare pnpm@latest --activate 
 
-# Copy source code in
-COPY . .
-
-# Install and build
+# Install deps
+COPY package.json package.json
 RUN pnpm i --frozen-lockfile
+
+# Build
+COPY . .
 RUN pnpm build
 
 CMD [ "pnpm", "start", "--port", "8787" ]
