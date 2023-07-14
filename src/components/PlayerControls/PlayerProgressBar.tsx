@@ -36,7 +36,7 @@ const PlayerProgressBar: Component = () => {
   );
 
   return (
-    <div>
+    <div class="absolute top-0 left-0 w-full">
       <div
         class="absolute top-0 left-0 w-0 w-full origin-left"
         style={{ height: "3px", "background-color": "rgba(0,0,0,0.2)" }}
