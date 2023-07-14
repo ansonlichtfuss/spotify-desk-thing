@@ -39,7 +39,7 @@ const DynamicBackground: Component<DynamicBackgroundType> = (props) => {
         })
         .catch(console.error);
     } else {
-      setAccentColor(DEFAULT_ACCENT_COLOR);
+      // setAccentColor(DEFAULT_ACCENT_COLOR);
     }
   });
 
