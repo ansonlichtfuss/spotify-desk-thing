@@ -8,7 +8,7 @@ RUN corepack enable && corepack prepare pnpm@latest --activate
 
 # Install deps
 COPY package.json package.json
-COPY pnpm-lock.json pnpm-lock.json
+COPY pnpm-lock.yaml pnpm-lock.yaml
 RUN pnpm i --frozen-lockfile
 
 # Build
