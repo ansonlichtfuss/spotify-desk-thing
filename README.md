@@ -1,4 +1,4 @@
-![Screenshot of Spotify Desk Thing now playing UI](/screenshot.jpg?raw=true)
+![Screenshot of Spotify Desk Thing now playing UI](/readme-thumbnail.jpg?raw=true)
 
 # Spotify Desk Thing
 
