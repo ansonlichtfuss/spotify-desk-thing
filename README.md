@@ -8,10 +8,44 @@ Made for the [Hyperpixel 4 Square Touch](https://shop.pimoroni.com/products/hype
 
 Written in [SolidJS](https://www.solidjs.com) using [SolidStart](https://start.solidjs.com/getting-started/what-is-solidstart). The core now playing screen and play/pause functionality is working, more functionality to be added later.
 
-### TODO:
+## Setup
+
+1. Clone the repo onto your local computer, then install dependencies:
+
+```
+pnpm i
+```
+
+2. Create an OAuth application in the Spotify Developer API portal: https://developer.spotify.com/dashboard
+3. Add these redirect URLs to the OAuth application config:
+
+```
+http://localhost:3000/auth/callback
+http://localhost:3000
+```
+
+4. Make a copy of the `.env.example` file as `.env`, then enter the Spotify Client ID and secret in the env file fields. We will get the refresh token in a moment.
+
+5. Build and start the application
+
+```
+pnpm build
+pnpm start
+```
+
+6. Run the application
+
+```
+pnpm start
+```
+
+
 
 - Add documentation 
 - Connect the shuffle/heart buttons
+
+## Wish list 
+
 - Custom podcast controls
 - Investigate other playback scenarios like when DJ is speaking
 - Copy better background color generation logic from the source code reconstruction:
