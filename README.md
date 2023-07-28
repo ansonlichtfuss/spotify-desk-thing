@@ -2,7 +2,7 @@
 
 # Spotify Desk Thing
 
-A custom clone of the Spotify Car Thing now playing UI for Raspberry Pi. Providing control via the Spotify API instead of Bluetooth (no need to pair devices and it can control most playback scenarios). Requires a Premium Spotify account. 
+A web-based clone of the Spotify Car Thing's now playing UI. Provides control via the Spotify API instead of Bluetooth (no need to pair devices and it can control most playback scenarios). Requires a Premium Spotify account. 
 
 Made for the [Hyperpixel 4 Square Touch](https://shop.pimoroni.com/products/hyperpixel-4-square?variant=30138251444307) display, using a Raspberry Pi 3A. 
 
@@ -42,6 +42,10 @@ pnpm start
 7. Navigate your browser to `localhost:3000/auth/initialize` to authenticate with Spotify. After granting access the refresh token will be displayed on screen. Copy this into the env file field for refresh token.
 
 8. The app should now be fully functional. Navigate to `localhost:3000` and play a song on your Spotify account (wait up to 15 seconds or refresh the page to see the now playing screen).
+
+## Running on Raspberry Pi
+
+This application runs as a Node-based web app, which can be displayed in any browser. For my setup, I have a Raspberry PI 3A running [DietPi](https://dietpi.com) configured to automatically launch Chromium with a tab opened to the location and port of the UI (could be `localhost:3000`). 
 
 ## Wish list 
 
