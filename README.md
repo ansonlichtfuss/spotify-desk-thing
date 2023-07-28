@@ -17,7 +17,7 @@ pnpm i
 ```
 
 2. Create an OAuth application in the Spotify Developer API portal: https://developer.spotify.com/dashboard
-3. Add these redirect URLs to the OAuth application config:
+3. Add these redirect URLs to the OAuth application config
 
 ```
 http://localhost:3000/auth/callback
@@ -26,20 +26,20 @@ http://localhost:3000
 
 4. Make a copy of the `.env.example` file as `.env`, then enter the Spotify Client ID and secret in the env file fields. We will get the refresh token in a moment.
 
-5. Build and start the application
+5. Start the development version of the application
+
+```
+pnpm dev
+```
+
+6. Navigate your browser to `localhost:3000/auth/initialize` to authenticate with Spotify. After granting access the refresh token will be displayed on screen. Copy this into the env file field for refresh token.
+
+7. Stop the previous development run of the app, then build and start the production version
 
 ```
 pnpm build
 pnpm start
 ```
-
-6. Run the application
-
-```
-pnpm start
-```
-
-7. Navigate your browser to `localhost:3000/auth/initialize` to authenticate with Spotify. After granting access the refresh token will be displayed on screen. Copy this into the env file field for refresh token.
 
 8. The app should now be fully functional. Navigate to `localhost:3000` and play a song on your Spotify account (wait up to 15 seconds or refresh the page to see the now playing screen).
 
