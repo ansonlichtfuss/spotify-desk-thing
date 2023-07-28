@@ -39,10 +39,9 @@ pnpm start
 pnpm start
 ```
 
+7. Navigate your browser to `localhost:3000/auth/initialize` to authenticate with Spotify. After granting access the refresh token will be displayed on screen. Copy this into the env file field for refresh token.
 
-
-- Add documentation 
-- Connect the shuffle/heart buttons
+8. The app should now be fully functional. Navigate to `localhost:3000` and play a song on your Spotify account (wait up to 15 seconds or refresh the page to see the now playing screen).
 
 ## Wish list 
 

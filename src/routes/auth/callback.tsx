@@ -6,32 +6,37 @@ import fetch from "cross-fetch";
 import { createEffect, createSignal } from "solid-js";
 
 const TOKEN_ENDPOINT = `https://accounts.spotify.com/api/token`;
-const redirect_uri = 'http://localhost:3000/auth/callback';
+const redirect_uri = "http://localhost:3000/auth/callback";
 
 export default function AuthCallback() {
-  const code = (new URL(window.location.href)).searchParams.get('code') || '';
+  const code = new URL(window.location.href).searchParams.get("code") || "";
 
-  const [refreshToken, setRefreshToken] = createSignal('loading...');
+  const [refreshToken, setRefreshToken] = createSignal("loading...");
 
   createEffect(() => {
     async function doTheThing() {
-      const res = await fetch('/api/v1/spotify/get-refresh-token?' + new URLSearchParams({
-        code
-      }), {
-        method: "GET",
-      });
+      const res = await fetch(
+        "/api/v1/spotify/get-refresh-token?" +
+        new URLSearchParams({
+          code,
+        }),
+        {
+          method: "GET",
+        }
+      );
 
       const response = await res.json();
-      setRefreshToken(JSON.stringify(response));
+      setRefreshToken(response['refresh_token'] || JSON.stringify(response));
     }
 
     doTheThing();
   });
 
-  const searchParams = (new URL(window.location.href)).searchParams;
+  const searchParams = new URL(window.location.href).searchParams;
   return (
-    <div>Copy this into the 'VITE_SPOTIFY_REFRESH_TOKEN' field in the .env file:<p>{searchParams.get('code')}</p>
-      <p>-----</p>
-      <p>{refreshToken()}</p></div>
+    <div class="bg-white">
+      Copy this into the 'VITE_SPOTIFY_REFRESH_TOKEN' field in the .env file:
+      <p>{refreshToken()}</p>
+    </div>
   );
 }

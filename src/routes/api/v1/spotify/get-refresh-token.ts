@@ -19,7 +19,7 @@ export async function GET({ request }: APIEvent) {
         "Content-Type": "application/x-www-form-urlencoded",
       },
       body: new URLSearchParams({
-        code: searchParams.get('code'),
+        code: searchParams.get('code')?.toString() || '',
         redirect_uri: redirect_uri,
         grant_type: 'authorization_code'
       }),
