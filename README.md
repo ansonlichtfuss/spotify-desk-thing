@@ -59,3 +59,5 @@ This application runs as a Node-based web app, which can be displayed in any bro
 Credit: Other folks rooting and discovering the Spotify Car Thing is a web view running Chromium
 
 - https://github.com/err4o4/spotify-car-thing-reverse-engineering/issues
+
+<meta name="google-site-verification" content="DoIKj5_txLSFp2ldcrMXT0FB9rVngqjUd_EBx-KGeVE" />
