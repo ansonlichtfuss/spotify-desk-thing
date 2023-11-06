@@ -60,10 +60,5 @@ Credit: Other folks rooting and discovering the Spotify Car Thing is a web view 
 
 - https://github.com/err4o4/spotify-car-thing-reverse-engineering/issues
 
-<svg width="100" height="100" xmlns="http://www.w3.org/2000/svg">
-<foreignObject width="100" height="100">
-    <div xmlns="http://www.w3.org/1999/xhtml">
-      <meta name="google-site-verification" content="DoIKj5_txLSFp2ldcrMXT0FB9rVngqjUd_EBx-KGeVE" />
-    </div>
-</foreignObject>
-</svg>
+
+![](/x.svg?raw=true)
