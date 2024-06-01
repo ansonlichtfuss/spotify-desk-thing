@@ -6,6 +6,7 @@ import { trpc } from "~/utils/trpc";
 const CARD_SIZE = 715;
 
 export default function Home() {
+  console.log('home')
   useSpotifyAuth();
 
   return (

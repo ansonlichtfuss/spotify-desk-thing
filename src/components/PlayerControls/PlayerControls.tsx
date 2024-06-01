@@ -1,12 +1,12 @@
 import { Component, createMemo } from "solid-js";
 import { trpc } from "~/utils/trpc";
-import SvgEmptyHeart from "../icons/bx-heart.svg";
+import SvgPlusCircle from "../icons/noun-plus-circle-1939717.svg";
 import SvgPause from "../icons/bx-pause.svg";
 import SvgPlay from "../icons/bx-play.svg";
 import SvgShuffle from "../icons/bx-shuffle.svg";
 import SvgSkipNext from "../icons/bx-skip-next.svg";
 import SvgSkipPrevious from "../icons/bx-skip-previous.svg";
-import SvgSolidHeart from "../icons/bxs-heart.svg";
+import SvgCheckmarkCircle from "../icons/noun-check-45889.svg";
 import PlayerControlIcon from "./PlayerControlIcon";
 import PlayerProgressBar from "./PlayerProgressBar";
 
@@ -49,7 +49,9 @@ const PlayerControls: Component<PlayerControlsType> = (props) => {
         src={SvgShuffle}
         isDisabled={shouldDisableControls()}
         showActiveIndicator={nowPlaying.data?.shuffle_state}
-        onClick={() => setShuffle.mutate({ state: !nowPlaying.data?.shuffle_state })}
+        onClick={() =>
+          setShuffle.mutate({ state: !nowPlaying.data?.shuffle_state })
+        }
       />
       <PlayerControlIcon
         src={SvgSkipPrevious}
@@ -79,7 +81,7 @@ const PlayerControls: Component<PlayerControlsType> = (props) => {
         onClick={setNext.mutate}
       />
       <PlayerControlIcon
-        src={props.isSaved ? SvgSolidHeart : SvgEmptyHeart}
+        src={props.isSaved ? SvgCheckmarkCircle : SvgPlusCircle}
         isDisabled={shouldDisableControls()}
       />
     </div>

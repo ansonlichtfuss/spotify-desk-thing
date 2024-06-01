@@ -1,5 +1,5 @@
-import add from "date-fns/add";
-import differenceInSeconds from "date-fns/differenceInSeconds";
+import {add} from "date-fns/add";
+import {differenceInSeconds} from "date-fns/differenceInSeconds";
 import isAfter from "date-fns/isAfter";
 import { createEffect, createSignal } from "solid-js";
 import { createStore } from "solid-js/store";
@@ -22,6 +22,7 @@ export const useSpotifyAuth = () => {
   const accessTokenQuery = trpc.auth.accessToken.useQuery();
 
   createEffect(() => {
+    console.log('auth effect')
     let timerReference = -1;
     if (accessTokenQuery.isSuccess && accessTokenQuery.data) {
       setAuthTokenSignal(accessTokenQuery.data.access_token);
