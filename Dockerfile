@@ -1,10 +1,10 @@
-FROM node:18-alpine
+FROM node:lts-alpine
 
 # Create app directory
 WORKDIR /usr/src/app
 
 # Add pnpm
-RUN corepack enable && corepack prepare pnpm@latest --activate 
+RUN corepack enable && corepack prepare pnpm@latest --activate
 
 # Install deps
 COPY package.json package.json
