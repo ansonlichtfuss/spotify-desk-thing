@@ -2,9 +2,9 @@
 
 # Spotify Desk Thing
 
-A web-based clone of the Spotify Car Thing's now playing UI. Provides control via the Spotify API instead of Bluetooth (no need to pair devices and it can control most playback scenarios). Requires a Premium Spotify account. 
+A web-based clone of the Spotify Car Thing's now playing UI. Provides control via the Spotify API instead of Bluetooth (no need to pair devices and it can control most playback scenarios). Requires a Premium Spotify account.
 
-Made for the [Hyperpixel 4 Square Touch](https://shop.pimoroni.com/products/hyperpixel-4-square?variant=30138251444307) display, using a Raspberry Pi 3A. 
+Made for the [Hyperpixel 4 Square Touch](https://shop.pimoroni.com/products/hyperpixel-4-square?variant=30138251444307) display, using a Raspberry Pi 3A.
 
 Written in [SolidJS](https://www.solidjs.com) using [SolidStart](https://start.solidjs.com/getting-started/what-is-solidstart). The core now playing screen and play/pause functionality is working, more functionality to be added later.
 
@@ -45,9 +45,9 @@ pnpm start
 
 ## Running on Raspberry Pi
 
-This application runs as a Node-based web app, which can be displayed in any browser. For my setup, I have a Raspberry PI 3A running [DietPi](https://dietpi.com) configured to automatically launch Chromium with a tab opened to the location and port of the UI (could be `localhost:3000`). 
+This application runs as a Node-based web app, which can be displayed in any browser. For my setup, I have a Raspberry PI 3A running [DietPi](https://dietpi.com) configured to automatically launch Chromium with a tab opened to the location and port of the UI (could be `localhost:3000`).
 
-## Wish list 
+## Wish list
 
 - Custom podcast controls
 - Investigate other playback scenarios like when DJ is speaking
@@ -59,3 +59,7 @@ This application runs as a Node-based web app, which can be displayed in any bro
 Credit: Other folks rooting and discovering the Spotify Car Thing is a web view running Chromium
 
 - https://github.com/err4o4/spotify-car-thing-reverse-engineering/issues
+- Icons:
+  - Font Awesome
+  - https://thenounproject.com/icon/add-button-3387958/
+  - https://thenounproject.com/icon/tick-3923816/

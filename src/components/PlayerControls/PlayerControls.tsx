@@ -1,12 +1,12 @@
 import { Component, createMemo } from "solid-js";
 import { trpc } from "~/utils/trpc";
-import SvgPlusCircle from "../icons/noun-plus-circle-1939717.svg";
+import SvgPlusCircle from "../icons/noun-add-button.svg";
 import SvgPause from "../icons/bx-pause.svg";
 import SvgPlay from "../icons/bx-play.svg";
 import SvgShuffle from "../icons/bx-shuffle.svg";
 import SvgSkipNext from "../icons/bx-skip-next.svg";
 import SvgSkipPrevious from "../icons/bx-skip-previous.svg";
-import SvgCheckmarkCircle from "../icons/noun-check-45889.svg";
+import SvgCheckmarkCircle from "../icons/noun-tick.svg";
 import PlayerControlIcon from "./PlayerControlIcon";
 import PlayerProgressBar from "./PlayerProgressBar";
 
