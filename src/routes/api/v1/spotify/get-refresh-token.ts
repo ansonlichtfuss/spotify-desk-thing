@@ -1,11 +1,12 @@
-import { APIEvent, json } from "solid-start";
+import { APIEvent } from "@solidjs/start/server";
+import { json } from "@solidjs/router";
 import fetch from "cross-fetch";
 
 const TOKEN_ENDPOINT = `https://accounts.spotify.com/api/token`;
-const redirect_uri = 'http://localhost:3000/auth/callback';
+const redirect_uri = "http://localhost:3000/auth/callback";
 
 export async function GET({ request }: APIEvent) {
-  const searchParams = (new URL(request.url)).searchParams;
+  const searchParams = new URL(request.url).searchParams;
 
   try {
     const client_id = import.meta.env.VITE_SPOTIFY_CLIENT_ID;
@@ -19,16 +20,16 @@ export async function GET({ request }: APIEvent) {
         "Content-Type": "application/x-www-form-urlencoded",
       },
       body: new URLSearchParams({
-        code: searchParams.get('code')?.toString() || '',
+        code: searchParams.get("code")?.toString() || "",
         redirect_uri: redirect_uri,
-        grant_type: 'authorization_code'
+        grant_type: "authorization_code",
       }),
     });
 
     const response = await res.json();
 
-    return json(response, 200);
+    return json(response, { status: 200 });
   } catch (e) {
-    return json(e, 500);
+    return json(e, { status: 500 });
   }
 }
