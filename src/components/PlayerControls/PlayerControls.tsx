@@ -37,7 +37,7 @@ const PlayerControls: Component<PlayerControlsType> = (props) => {
 
   return (
     <div
-      class="hidden fixed w-full left-0 bottom-0 flex items-center justify-between px-10"
+      class="hidden fixed w-full left-0 bottom-0 flex items-center justify-between px-14"
       style={{
         "background-color": "rgba(0,0,0,0.2)",
         height: "120px",
