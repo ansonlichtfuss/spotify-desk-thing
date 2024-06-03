@@ -4,7 +4,7 @@ import {
   SPOTIFY_NOW_PLAYING_ENDPOINT,
   SPOTIFY_SAVED_ENDPOINT,
   procedure,
-  router
+  router,
 } from "../utils";
 
 export default router({
@@ -41,13 +41,12 @@ export default router({
     .input(z.object({ ids: z.string().array() }))
     .query(async ({ input, ctx }) => {
       try {
-        console.log('hey tiff ids', input.ids)
         const searchParams = new URL(ctx.req.url).searchParams;
         const response = await fetch(
           `${SPOTIFY_SAVED_ENDPOINT}?` +
-          new URLSearchParams({
-            ids: `${input.ids.join(',')}`,
-          }),
+            new URLSearchParams({
+              ids: `${input.ids.join(",")}`,
+            }),
           {
             method: "GET",
             headers: {

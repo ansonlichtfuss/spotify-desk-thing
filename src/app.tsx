@@ -17,7 +17,6 @@ const getBaseUrl = () => {
 };
 
 export default function App() {
-  console.log("root query");
   const [queryClient] = createSignal(new QueryClient());
   const [trpcClient] = createSignal(
     trpc.createClient({
