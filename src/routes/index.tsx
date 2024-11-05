@@ -11,9 +11,11 @@ const CARD_SIZE = 715;
 export default function Home() {
   useSpotifyAuth();
 
+  const autoToken = (getAuthTokenSignal && getAuthTokenSignal?.()) || "";
+
   return (
     <main>
-      {getAuthTokenSignal().length > 0 && (
+      {autoToken.length > 0 && (
         <div class="flex items-center justify-center w-screen h-screen text-white">
           <div
             class="relative flex"
