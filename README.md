@@ -2,7 +2,7 @@
 
 # Spotify Desk Thing
 
-<img align="right" src="/readme-irl-pictures.gif?raw=true" alt="Animate GIF showing the real-life implementation of this project" style="width:240px;">
+<img align="right" src="/readme-irl-pictures.gif?raw=true" alt="Animate GIF showing the real-life implementation of this project" style="width:160px;">
 
 A web-based clone of the Spotify Car Thing's now playing UI. Provides control via the Spotify API instead of Bluetooth (no need to pair devices and it can control most playback scenarios). Requires a Premium Spotify account.
 
