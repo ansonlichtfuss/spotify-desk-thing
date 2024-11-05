@@ -2,15 +2,16 @@
 
 # Spotify Desk Thing
 
+
+  <img align="right" src="/readme-irl-pictures.gif?raw=true" alt="Animate GIF showing the real-life implementation of this project" style="width:240px;">
+
 A web-based clone of the Spotify Car Thing's now playing UI. Provides control via the Spotify API instead of Bluetooth (no need to pair devices and it can control most playback scenarios). Requires a Premium Spotify account.
 
 Made for the [Hyperpixel 4 Square Touch](https://shop.pimoroni.com/products/hyperpixel-4-square?variant=30138251444307) display, using a Raspberry Pi 3A.
 
 Written in [SolidJS](https://www.solidjs.com) using [SolidStart](https://start.solidjs.com/getting-started/what-is-solidstart). The core now playing screen and play/pause functionality is working, more functionality to be added later.
 
-<div align="center">
-  <img src="/readme-irl-pictures.gif?raw=true" alt="Animate GIF showing the real-life implementation of this project" style="width:240px;">
-</div>
+  <img align="right" src="/readme-irl-pictures.gif?raw=true" alt="Animate GIF showing the real-life implementation of this project" style="width:242px;">
 
 ## Setup
 
