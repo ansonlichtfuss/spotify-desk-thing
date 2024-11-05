@@ -26,7 +26,10 @@ const PlayerControls: Component<PlayerControlsType> = (props) => {
   const utils = trpc.useContext();
   const onSuccessMutator = () => ({
     onSuccess: () => {
-      utils.metadata.nowPlaying.invalidate();
+      // slight delay to allow change to propagate through backend
+      setTimeout(() => {
+        utils.metadata.nowPlaying.invalidate();
+      }, 500);
     },
   });
   const setShuffle = trpc.actions.shuffle.useMutation(onSuccessMutator);
