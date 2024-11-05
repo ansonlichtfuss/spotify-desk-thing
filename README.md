@@ -8,10 +8,8 @@ Made for the [Hyperpixel 4 Square Touch](https://shop.pimoroni.com/products/hype
 
 Written in [SolidJS](https://www.solidjs.com) using [SolidStart](https://start.solidjs.com/getting-started/what-is-solidstart). The core now playing screen and play/pause functionality is working, more functionality to be added later.
 
-<div style="text-align:center">
-  <div style="display:inline-block;overflow:hidden;border-radius:10px;">
-    <img src="/readme-irl-pictures.gif?raw=true" alt="Animate GIF showing the real-life implementation of this project" style="width:240px;">
-  </div>
+<div align="center">
+  <img src="/readme-irl-pictures.gif?raw=true" alt="Animate GIF showing the real-life implementation of this project" style="width:240px;">
 </div>
 
 ## Setup
