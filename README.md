@@ -2,6 +2,8 @@
 
 # Spotify Desk Thing
 
+<img align="right" src="/readme-irl-pictures.gif?raw=true" alt="Animate GIF showing the real-life implementation of this project" style="width:180px;">
+
 A web-based clone of the Spotify Car Thing's now playing UI. Provides control via the Spotify API instead of Bluetooth (no need to pair devices and it can control most playback scenarios). Requires a Premium Spotify account.
 
 Made for the [Hyperpixel 4 Square Touch](https://shop.pimoroni.com/products/hyperpixel-4-square?variant=30138251444307) display, using a Raspberry Pi 3A.
@@ -45,7 +47,9 @@ pnpm start
 
 ## Running on Raspberry Pi
 
-This application runs as a Node-based web app, which can be displayed in any browser. For my setup, I have a Raspberry PI 3A running [DietPi](https://dietpi.com) configured to automatically launch Chromium with a tab opened to the location and port of the UI (could be `localhost:3000`).
+This application runs as a Node-based web app, which can be displayed in any browser. For my setup, I have a Raspberry PI 3A running [DietPi](https://dietpi.com) configured to automatically launch Chromium with a tab opened to the location and port of the UI (could be `localhost:3000`, I have the server running in a Docker container on my NAS on my local network).
+
+- This repo includes the Dockerfile I use for my own self-hosted setup. Check the network settings, as they might be different depending on the environment.
 
 ## Wish list
 
