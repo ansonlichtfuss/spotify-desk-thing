@@ -1,4 +1,4 @@
-const redirect_uri = "http://localhost:3000/auth/callback";
+const redirect_uri = "http://127.0.0.1:3000/auth/callback";
 const client_id = import.meta.env.VITE_SPOTIFY_CLIENT_ID;
 const scope =
   "streaming user-modify-playback-state user-read-playback-state user-read-currently-playing user-read-email user-read-playback-position user-read-private user-top-read user-library-read user-library-read";

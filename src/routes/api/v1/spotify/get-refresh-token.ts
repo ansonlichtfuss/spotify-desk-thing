@@ -3,7 +3,7 @@ import { json } from "@solidjs/router";
 import fetch from "cross-fetch";
 
 const TOKEN_ENDPOINT = `https://accounts.spotify.com/api/token`;
-const redirect_uri = "http://localhost:3000/auth/callback";
+const redirect_uri = "http://127.0.0.1:3000/auth/callback";
 
 export async function GET({ request }: APIEvent) {
   const searchParams = new URL(request.url).searchParams;
