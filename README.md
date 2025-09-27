@@ -22,8 +22,8 @@ pnpm i
 3. Add these redirect URLs to the OAuth application config
 
 ```
-http://localhost:3000/auth/callback
-http://localhost:3000
+http://127.0.0.1:3000/auth/callback
+http://127.0.0.1:3000
 ```
 
 4. Make a copy of the `.env.example` file as `.env`, then enter the Spotify Client ID and secret in the env file fields. We will get the refresh token in a moment.
@@ -34,7 +34,7 @@ http://localhost:3000
 pnpm dev
 ```
 
-6. Navigate your browser to `localhost:3000/auth/initialize` to authenticate with Spotify. After granting access the refresh token will be displayed on screen. Copy this into the env file field for refresh token.
+6. Navigate your browser to `127.0.0.1:3000/auth/initialize` to authenticate with Spotify. After granting access the refresh token will be displayed on screen. Copy this into the env file field for refresh token.
 
 7. Stop the previous development run of the app, then build and start the production version
 
@@ -43,11 +43,11 @@ pnpm build
 pnpm start
 ```
 
-8. The app should now be fully functional. Navigate to `localhost:3000` and play a song on your Spotify account (wait up to 15 seconds or refresh the page to see the now playing screen).
+8. The app should now be fully functional. Navigate to `127.0.0.1:3000` and play a song on your Spotify account (wait up to 15 seconds or refresh the page to see the now playing screen).
 
 ## Running on Raspberry Pi
 
-This application runs as a Node-based web app, which can be displayed in any browser. For my setup, I have a Raspberry PI 3A running [DietPi](https://dietpi.com) configured to automatically launch Chromium with a tab opened to the location and port of the UI (could be `localhost:3000`, I have the server running in a Docker container on my NAS on my local network).
+This application runs as a Node-based web app, which can be displayed in any browser. For my setup, I have a Raspberry PI 3A running [DietPi](https://dietpi.com) configured to automatically launch Chromium with a tab opened to the location and port of the UI (could be `127.0.0.1:3000`, I have the server running in a Docker container on my NAS on my local network).
 
 - This repo includes the Dockerfile I use for my own self-hosted setup. Check the network settings, as they might be different depending on the environment.
 
