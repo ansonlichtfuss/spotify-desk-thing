@@ -13,7 +13,7 @@ import { trpc } from "./utils/trpc";
 
 const getBaseUrl = () => {
   if (typeof window !== "undefined") return "";
-  return `http://localhost:${process.env.PORT ?? 3000}`;
+  return `http://127.0.0.1:${process.env.PORT ?? 3000}`;
 };
 
 export default function App() {
