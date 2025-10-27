@@ -12,14 +12,12 @@ export default function Home() {
   const [isAuthenticated, setIsAuthenticated] = createSignal(false);
   const [showAuthError, setShowAuthError] = createSignal(false);
 
-  const authToken = getAuthTokenSignal?.();
-
   createEffect(() => {
     let timerReference = null;
 
     // Wait a little bit, then if we're still not authenticated show an error
     timerReference = setTimeout(() => {
-      if (!authToken) {
+      if (!getAuthTokenSignal?.()) {
         setShowAuthError(true);
       }
     }, 2000);
@@ -28,6 +26,7 @@ export default function Home() {
     if (getAuthTokenSignal?.() && getAuthTokenSignal?.().length > 0) {
       clearTimeout(timerReference);
       setIsAuthenticated(true);
+      setShowAuthError(false);
     }
 
     return () => {
