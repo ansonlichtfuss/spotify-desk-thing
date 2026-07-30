@@ -7,27 +7,27 @@
     "start": "vinxi start"
   },
   "dependencies": {
-    "@fontsource-variable/plus-jakarta-sans": "^5.2.8",
+    "@fontsource-variable/plus-jakarta-sans": "^5.3.0",
     "@solidjs/router": "^0.15.3",
     "@solidjs/start": "^1.2.0",
-    "@tanstack/solid-query": "5.90.4",
+    "@tanstack/solid-query": "5.101.4",
     "@trpc/client": "^10.45.2",
     "@trpc/server": "^10.45.2",
     "@types/spotify-api": "^0.0.25",
-    "@unocss/preset-wind": "^66.5.3",
-    "@unocss/reset": "^66.5.3",
+    "@unocss/preset-wind": "^66.7.5",
+    "@unocss/reset": "^66.7.5",
     "cross-fetch": "^4.1.0",
-    "date-fns": "^4.1.0",
+    "date-fns": "^4.4.0",
     "extract-colors": "^4.2.1",
-    "prettier": "^3.6.2",
-    "solid-js": "^1.9.9",
+    "prettier": "^3.9.6",
+    "solid-js": "^1.9.14",
     "solid-start-trpc": "^0.0.16",
     "solid-trpc": "0.0.11-rc.3",
     "typescript": "^5.9.3",
     "undici": "^7.16.0",
-    "unocss": "^66.5.3",
-    "vinxi": "^0.5.8",
-    "zod": "^4.1.12"
+    "unocss": "^66.7.5",
+    "vinxi": "^0.5.11",
+    "zod": "^4.4.3"
   },
   "engines": {
     "node": ">=18"
