@@ -1,34 +1,9 @@
 import { createServerOnlyFn } from "@tanstack/solid-start";
-import { promises as fs } from "fs";
 import type { TokenFile } from "./types";
+import { getFileContent, setFileContent } from "./utils";
 
-export const getSpotifyClientId = createServerOnlyFn(
-	() => process.env.SPOTIFY_CLIENT_ID,
-);
-export const getSpotifyClientSecret = createServerOnlyFn(
-	() => process.env.SPOTIFY_CLIENT_SECRET,
-);
-
-async function getFileContent(filename: string) {
-	try {
-		const data = await fs.readFile(filename, "utf-8");
-		return data;
-	} catch (err) {
-		console.error(err);
-		return "{}";
-	}
-}
-
-async function setFileContent(filename: string, data: string) {
-	try {
-		await fs.writeFile(filename, data);
-	} catch (err) {
-		console.error(err);
-	}
-}
-
-const REFRESH_TOKEN_FILE_NAME = ".refreshtoken";
-const ACCESS_TOKEN_FILE_NAME = ".accesstoken";
+const REFRESH_TOKEN_FILE_NAME = ".token.refreshtoken";
+const ACCESS_TOKEN_FILE_NAME = ".token.accesstoken";
 
 export async function getRefreshTokenData(): Promise<TokenFile | null> {
 	const content = await getFileContent(REFRESH_TOKEN_FILE_NAME);
@@ -57,3 +32,10 @@ export async function getAccessTokenData(): Promise<TokenFile | null> {
 export async function setAccessTokenData(data: TokenFile) {
 	return await setFileContent(ACCESS_TOKEN_FILE_NAME, JSON.stringify(data));
 }
+
+export const getSpotifyClientId = createServerOnlyFn(
+	() => process.env.SPOTIFY_CLIENT_ID,
+);
+export const getSpotifyClientSecret = createServerOnlyFn(
+	() => process.env.SPOTIFY_CLIENT_SECRET,
+);

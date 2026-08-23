@@ -17,8 +17,8 @@ __unconfig*
 netlify
 
 # App specific
-.refreshtoken
-.accesstoken
+.token.refreshtoken
+.token.accesstoken
 
 # IDEs and editors
 /.idea
