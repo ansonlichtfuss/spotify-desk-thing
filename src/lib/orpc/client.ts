@@ -5,11 +5,11 @@ import { createRouterClient } from "@orpc/server";
 import { createTanstackQueryUtils } from "@orpc/tanstack-query";
 import { createIsomorphicFn } from "@tanstack/solid-start";
 import { getRequestHeaders } from "@tanstack/solid-start/server";
-import { router } from "./router";
+import * as routes from "./routes";
 
 const getORPCClient = createIsomorphicFn()
 	.server(() =>
-		createRouterClient(router, {
+		createRouterClient(routes, {
 			/**
 			 * Provide initial context if needed.
 			 *
@@ -22,7 +22,7 @@ const getORPCClient = createIsomorphicFn()
 			}),
 		}),
 	)
-	.client((): RouterClient<typeof router> => {
+	.client((): RouterClient<typeof routes> => {
 		const link = new RPCLink({
 			url: "/api/rpc",
 		});
@@ -30,7 +30,7 @@ const getORPCClient = createIsomorphicFn()
 		return createORPCClient(link);
 	});
 
-export const client: RouterClient<typeof router> = getORPCClient();
+export const client: RouterClient<typeof routes> = getORPCClient();
 
 export const orpc = createTanstackQueryUtils(client, {
 	prefix: "desk-thing",

@@ -1,5 +1,5 @@
 import { useQuery } from "@tanstack/solid-query";
-import { orpc } from "../lib/rpc/client.ts";
+import { orpc } from "../lib/orpc/client.ts";
 
 export const Planets = () => {
 	// const planets = createMemo(async () => {

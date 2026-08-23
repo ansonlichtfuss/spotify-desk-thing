@@ -1,9 +1,24 @@
 import { onError } from "@orpc/server";
 import { RPCHandler } from "@orpc/server/fetch";
+import {
+	BatchHandlerPlugin,
+	CORSHandlerPlugin,
+	RequestHeadersHandlerPlugin,
+	ResponseHeadersHandlerPlugin,
+} from "@orpc/server/plugins";
 import { createFileRoute } from "@tanstack/solid-router";
-import { router } from "../../lib/rpc/router";
+import * as routes from "../../lib/orpc/routes";
 
-const handler = new RPCHandler(router, {
+const handler = new RPCHandler(routes, {
+	plugins: [
+		new BatchHandlerPlugin(),
+		new CORSHandlerPlugin({
+			origin: ["*"],
+			allowMethods: ["GET", "HEAD", "PUT", "POST", "DELETE", "PATCH", "QUERY"],
+		}),
+		new RequestHeadersHandlerPlugin(),
+		new ResponseHeadersHandlerPlugin(),
+	],
 	interceptors: [
 		onError((error) => {
 			console.error(error);
