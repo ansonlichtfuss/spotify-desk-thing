@@ -1,12 +1,10 @@
-import { HydrationScript, type JSX, Loading, NoHydration } from "@solidjs/web";
+import { HydrationScript, type JSX, Loading } from "@solidjs/web";
 import { QueryClientProvider } from "@tanstack/solid-query";
-import { SolidQueryDevtools } from "@tanstack/solid-query-devtools";
 import {
 	createRootRouteWithContext,
 	HeadContent,
 	Scripts,
 } from "@tanstack/solid-router";
-import { TanStackRouterDevtools } from "@tanstack/solid-router-devtools";
 import Header from "../components/Header";
 import { queryClient } from "../lib/query-client";
 import styleCss from "../styles.css?url";
@@ -30,10 +28,8 @@ function RootComponent(props: { children: JSX.Element }) {
 					<QueryClientProvider client={queryClient}>
 						<Header />
 						{props.children}
-						<TanStackRouterDevtools />
-						<NoHydration>
-							<SolidQueryDevtools buttonPosition="bottom-right" />
-						</NoHydration>
+						{/* <TanStackRouterDevtools /> */}
+						{/* <SolidQueryDevtools buttonPosition="bottom-right" /> */}
 					</QueryClientProvider>
 				</Loading>
 				<Scripts />
