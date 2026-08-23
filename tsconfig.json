@@ -1,5 +1,5 @@
 {
-  "include": ["**/*.ts", "**/*.tsx", "src/routes/api/spotify-MIGRATE-ME/top-tracks.ts.bak", "src/routes/api/spotify-MIGRATE-ME/devices.ts.bak"],
+  "include": ["**/*.ts", "**/*.tsx"],
   "compilerOptions": {
     "target": "ES2022",
     "jsx": "preserve",

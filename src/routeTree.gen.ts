@@ -11,6 +11,8 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AboutRouteImport } from './routes/about'
+import { Route as AuthCallbackRouteImport } from './routes/auth/callback'
+import { Route as AuthInitializeRouteImport } from './routes/auth/initialize'
 import { Route as ApiRpcSplatRouteImport } from './routes/api/rpc.$'
 
 const IndexRoute = IndexRouteImport.update({
@@ -23,6 +25,16 @@ const AboutRoute = AboutRouteImport.update({
   path: '/about',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AuthCallbackRoute = AuthCallbackRouteImport.update({
+  id: '/auth/callback',
+  path: '/auth/callback',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AuthInitializeRoute = AuthInitializeRouteImport.update({
+  id: '/auth/initialize',
+  path: '/auth/initialize',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ApiRpcSplatRoute = ApiRpcSplatRouteImport.update({
   id: '/api/rpc/$',
   path: '/api/rpc/$',
@@ -32,30 +44,45 @@ const ApiRpcSplatRoute = ApiRpcSplatRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
+  '/auth/callback': typeof AuthCallbackRoute
+  '/auth/initialize': typeof AuthInitializeRoute
   '/api/rpc/$': typeof ApiRpcSplatRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
+  '/auth/callback': typeof AuthCallbackRoute
+  '/auth/initialize': typeof AuthInitializeRoute
   '/api/rpc/$': typeof ApiRpcSplatRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
+  '/auth/callback': typeof AuthCallbackRoute
+  '/auth/initialize': typeof AuthInitializeRoute
   '/api/rpc/$': typeof ApiRpcSplatRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/about' | '/api/rpc/$'
+  fullPaths:
+    '/' | '/about' | '/auth/callback' | '/auth/initialize' | '/api/rpc/$'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/about' | '/api/rpc/$'
-  id: '__root__' | '/' | '/about' | '/api/rpc/$'
+  to: '/' | '/about' | '/auth/callback' | '/auth/initialize' | '/api/rpc/$'
+  id:
+    | '__root__'
+    | '/'
+    | '/about'
+    | '/auth/callback'
+    | '/auth/initialize'
+    | '/api/rpc/$'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AboutRoute: typeof AboutRoute
+  AuthCallbackRoute: typeof AuthCallbackRoute
+  AuthInitializeRoute: typeof AuthInitializeRoute
   ApiRpcSplatRoute: typeof ApiRpcSplatRoute
 }
 
@@ -75,6 +102,20 @@ declare module '@tanstack/solid-router' {
       preLoaderRoute: typeof AboutRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/auth/callback': {
+      id: '/auth/callback'
+      path: '/auth/callback'
+      fullPath: '/auth/callback'
+      preLoaderRoute: typeof AuthCallbackRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/auth/initialize': {
+      id: '/auth/initialize'
+      path: '/auth/initialize'
+      fullPath: '/auth/initialize'
+      preLoaderRoute: typeof AuthInitializeRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/api/rpc/$': {
       id: '/api/rpc/$'
       path: '/api/rpc/$'
@@ -88,6 +129,8 @@ declare module '@tanstack/solid-router' {
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AboutRoute: AboutRoute,
+  AuthCallbackRoute: AuthCallbackRoute,
+  AuthInitializeRoute: AuthInitializeRoute,
   ApiRpcSplatRoute: ApiRpcSplatRoute,
 }
 export const routeTree = rootRouteImport

@@ -1,4 +1,9 @@
+import { createFileRoute } from "@tanstack/solid-router";
 import { createEffect, createSignal } from "solid-js";
+
+export const Route = createFileRoute("/auth/callback")({
+	component: AuthCallback,
+});
 
 export default function AuthCallback() {
 	const code = new URL(window.location.href).searchParams.get("code") || "";

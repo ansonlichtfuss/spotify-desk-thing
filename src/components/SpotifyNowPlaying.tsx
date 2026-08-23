@@ -1,15 +1,16 @@
+import { useQuery } from "@tanstack/solid-query";
 import {
 	type Component,
 	createEffect,
 	createMemo,
 	createSignal,
-	onCleanup,
 } from "solid-js";
-import { trpc } from "~/utils/trpc";
-import DynamicBackground from "./DynamicBackground";
+import { orpc } from "../lib/orpc/client";
+import type { AlbumMetadata, EpisodeMetadata, UiMetadata } from "../lib/types";
+import DynamicBackground from "./components-MIGRATE-ME/DynamicBackground";
+import PlayerControls from "./components-MIGRATE-ME/PlayerControls/PlayerControls";
+import Screensaver from "./components-MIGRATE-ME/Screensaver";
 import SvgMusic from "./icons/bx-music.svg";
-import PlayerControls from "./PlayerControls/PlayerControls";
-import Screensaver from "./Screensaver";
 
 const PREVIEW_SIZE = 400;
 
@@ -42,39 +43,41 @@ const metadataMappers: Record<
 };
 
 const SpotifyNowPlaying: Component = () => {
-	const utils = trpc.useContext();
 	const [showScreensaver, setShowScreensaver] = createSignal(true);
-	const nowPlayingQuery = trpc.metadata.nowPlaying.useQuery();
-	const isSavedQuery = trpc.metadata.saved.useQuery(
-		() => ({ ids: [nowPlayingQuery.data?.item?.id || ""] }),
-		() => ({
+	const nowPlayingQuery = useQuery(() =>
+		orpc.metadata.nowPlaying.queryOptions(),
+	);
+	const isSavedQuery = useQuery(() =>
+		orpc.metadata.saved.queryOptions({
+			input: { ids: [nowPlayingQuery.data?.item?.id || ""] },
 			enabled: !!nowPlayingQuery.data?.item?.id,
 		}),
 	);
 
-	createEffect(() => {
-		const thisNowPlaying = nowPlayingQuery.data;
-		let interval: number;
-		let refreshTimeout = thisNowPlaying?.is_playing ? 8000 : 15000;
-		if (thisNowPlaying !== undefined) {
-			const songDuration = thisNowPlaying?.item?.duration_ms ?? 0;
-			const currentProgress = thisNowPlaying?.progress_ms ?? 0;
+	createEffect(
+		() => nowPlayingQuery.data,
+		() => {
+			const thisNowPlaying = nowPlayingQuery.data;
+			let refreshTimeout = thisNowPlaying?.is_playing ? 8000 : 15000;
+			if (thisNowPlaying !== undefined) {
+				const songDuration = thisNowPlaying?.item?.duration_ms ?? 0;
+				const currentProgress = thisNowPlaying?.progress_ms ?? 0;
 
-			const timeLeftOnSong = songDuration - currentProgress;
-			if (thisNowPlaying?.is_playing && timeLeftOnSong < refreshTimeout) {
-				refreshTimeout = timeLeftOnSong + 1000;
+				const timeLeftOnSong = songDuration - currentProgress;
+				if (thisNowPlaying?.is_playing && timeLeftOnSong < refreshTimeout) {
+					refreshTimeout = timeLeftOnSong + 1000;
+				}
 			}
-		}
 
-		interval = setInterval(
-			() => utils.metadata.nowPlaying.invalidate(),
-			refreshTimeout,
-		);
-
-		onCleanup(() => {
-			clearInterval(interval);
-		});
-	});
+			const interval = setInterval(
+				() => nowPlayingQuery.refetch(),
+				refreshTimeout,
+			);
+			return () => {
+				clearInterval(interval);
+			};
+		},
+	);
 
 	const metadata = createMemo<UiMetadata>(() => {
 		const mapperKey = nowPlayingQuery.data?.currently_playing_type ?? "track";
@@ -117,6 +120,7 @@ const SpotifyNowPlaying: Component = () => {
 						>
 							<div class="absolute z-0">
 								<img
+									alt="Generic music icon"
 									src={SvgMusic}
 									width={`${PREVIEW_SIZE / 2}px`}
 									height={`${PREVIEW_SIZE / 2}px`}

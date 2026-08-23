@@ -1,3 +1,9 @@
+import { createFileRoute } from "@tanstack/solid-router";
+
+export const Route = createFileRoute("/auth/initialize")({
+	component: AuthInitialize,
+});
+
 const redirect_uri = "http://127.0.0.1:3000/auth/callback";
 const client_id = import.meta.env.VITE_SPOTIFY_CLIENT_ID;
 const scope =
