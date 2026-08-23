@@ -1,8 +1,16 @@
 import { ORPCError } from "@orpc/client";
+import { createServerOnlyFn } from "@tanstack/solid-start";
 import { z } from "zod";
-import { getRefreshToken } from "../../refresh-token";
+import { getRefreshToken } from "../../token-fs";
 import { OAUTH_REDIRECT_URI, SPOTIFY_API_URLS } from "../constants";
 import { base } from "../handler";
+
+const getSpotifyClientId = createServerOnlyFn(
+	() => process.env.SPOTIFY_CLIENT_ID,
+);
+const getSpotifyClientSecret = createServerOnlyFn(
+	() => process.env.SPOTIFY_CLIENT_SECRET,
+);
 
 export type SpotifyAuthState = {
 	access_token: string;
@@ -15,12 +23,10 @@ export type SpotifyAuthState = {
 
 export const accessToken = base.handler(async () => {
 	try {
-		const client_id = import.meta.env.VITE_SPOTIFY_CLIENT_ID;
-		const client_secret = import.meta.env.VITE_SPOTIFY_CLIENT_SECRET;
-		// const refresh_token: string =
-		//   import.meta.env.VITE_SPOTIFY_REFRESH_TOKEN || "";
+		const client_id = getSpotifyClientId();
+		const client_secret = getSpotifyClientSecret();
 		const refresh_token = await getRefreshToken();
-		// console.log("hey tiff TOKENS", { client_id, client_secret, refresh_token });
+		console.log("hey tiff TOKENS", { client_id, client_secret, refresh_token });
 		const basic = btoa(`${client_id}:${client_secret}`);
 
 		const res = await fetch(SPOTIFY_API_URLS.token, {
@@ -64,8 +70,8 @@ export const accessToken = base.handler(async () => {
 export const refreshToken = base
 	.input(z.object({ code: z.string() }))
 	.handler(async ({ input }) => {
-		const client_id = import.meta.env.VITE_SPOTIFY_CLIENT_ID;
-		const client_secret = import.meta.env.VITE_SPOTIFY_CLIENT_SECRET;
+		const client_id = getSpotifyClientId();
+		const client_secret = getSpotifyClientSecret();
 		const basic = btoa(`${client_id}:${client_secret}`);
 
 		const res = await fetch(SPOTIFY_API_URLS.token, {

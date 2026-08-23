@@ -1,5 +1,4 @@
 node_modules
-.DS_Store
 dist
 dist-ssr
 *.local
@@ -10,4 +9,27 @@ dist-ssr
 .output
 .vinxi
 __unconfig*
+.solid
+.output
+.vercel
+.netlify
+.vinxi
+netlify
+
+# App specific
 .refreshtoken
+.accesstoken
+
+# IDEs and editors
+/.idea
+.project
+.classpath
+*.launch
+.settings/
+
+# Temp
+gitignore
+
+# System Files
+.DS_Store
+Thumbs.db
