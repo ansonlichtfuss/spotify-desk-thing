@@ -10,14 +10,24 @@ export const useSpotifyAuth = () => {
 	const accessTokenQuery = useQuery(() => orpc.auth.accessToken.queryOptions());
 
 	createEffect(
-		() => accessTokenQuery.data,
-		() => {
+		() => ({
+			data: accessTokenQuery.data,
+			isLoading: accessTokenQuery.isLoading,
+			isSuccess: accessTokenQuery.isSuccess,
+		}),
+		({ data, isLoading, isSuccess }) => {
+			console.log(
+				"hey tiff access token query",
+				data.access_token,
+				isLoading,
+				isSuccess,
+			);
 			let timerReference: NodeJS.Timeout;
-			if (accessTokenQuery.isSuccess && accessTokenQuery.data) {
-				setAuthTokenSignal(accessTokenQuery.data.access_token);
+			if (isSuccess) {
+				setAuthTokenSignal(data.access_token);
 
 				const calculatedExpiration = add(new Date(), {
-					seconds: accessTokenQuery.data.expires_in - 600,
+					seconds: data.expires_in - 600,
 				});
 				const diffSec = differenceInSeconds(calculatedExpiration, new Date());
 				timerReference = setTimeout(() => {

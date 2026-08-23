@@ -1,6 +1,7 @@
 import { ORPCError } from "@orpc/client";
-import { getRefreshToken, setRefreshToken } from "../../refresh-token";
-import { SPOTIFY_API_URLS } from "../constants";
+import { z } from "zod";
+import { getRefreshToken } from "../../refresh-token";
+import { OAUTH_REDIRECT_URI, SPOTIFY_API_URLS } from "../constants";
 import { base } from "../handler";
 
 export type SpotifyAuthState = {
@@ -19,6 +20,7 @@ export const accessToken = base.handler(async () => {
 		// const refresh_token: string =
 		//   import.meta.env.VITE_SPOTIFY_REFRESH_TOKEN || "";
 		const refresh_token = await getRefreshToken();
+		// console.log("hey tiff TOKENS", { client_id, client_secret, refresh_token });
 		const basic = btoa(`${client_id}:${client_secret}`);
 
 		const res = await fetch(SPOTIFY_API_URLS.token, {
@@ -39,7 +41,7 @@ export const accessToken = base.handler(async () => {
 		}
 
 		if (json?.error) {
-			setRefreshToken("token_expired_or_missing");
+			// setRefreshToken("token_expired_or_missing");
 			return new ORPCError("UNAUTHORIZED", {
 				message: json.error,
 				// optional: pass the original error to retain stack trace
@@ -58,3 +60,28 @@ export const accessToken = base.handler(async () => {
 		}
 	}
 });
+
+export const refreshToken = base
+	.input(z.object({ code: z.string() }))
+	.handler(async ({ input }) => {
+		const client_id = import.meta.env.VITE_SPOTIFY_CLIENT_ID;
+		const client_secret = import.meta.env.VITE_SPOTIFY_CLIENT_SECRET;
+		const basic = btoa(`${client_id}:${client_secret}`);
+
+		const res = await fetch(SPOTIFY_API_URLS.token, {
+			method: "POST",
+			headers: {
+				Authorization: `Basic ${basic}`,
+				"Content-Type": "application/x-www-form-urlencoded",
+			},
+			body: new URLSearchParams({
+				code: input.code,
+				redirect_uri: OAUTH_REDIRECT_URI,
+				grant_type: "authorization_code",
+			}),
+		});
+
+		const response = await res.json();
+
+		return response;
+	});

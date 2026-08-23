@@ -10,3 +10,5 @@ export const SPOTIFY_API_URLS = {
 	next: `${SPOTIFY_API_BASE_URL}/me/player/next`,
 	shuffle: `${SPOTIFY_API_BASE_URL}/me/player/shuffle`,
 };
+
+export const OAUTH_REDIRECT_URI = "http://127.0.0.1:3000/auth/callback";

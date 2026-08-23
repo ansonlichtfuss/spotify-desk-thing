@@ -10,3 +10,4 @@ dist-ssr
 .output
 .vinxi
 __unconfig*
+.refreshtoken

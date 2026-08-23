@@ -1,5 +1,6 @@
 import { createFileRoute } from "@tanstack/solid-router";
 import { createEffect, createSignal } from "solid-js";
+import SpotifyNowPlaying from "../components/SpotifyNowPlaying";
 import {
 	getAuthTokenSignal,
 	useSpotifyAuth,
@@ -61,7 +62,7 @@ function App() {
 								"scroll-snap-align": "center",
 							}}
 						>
-							{/* <SpotifyNowPlaying /> */}
+							<SpotifyNowPlaying />
 						</div>
 					</div>
 				</div>
