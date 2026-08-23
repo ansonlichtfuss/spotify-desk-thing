@@ -7,10 +7,10 @@ import {
 } from "solid-js";
 import { orpc } from "../lib/orpc/client";
 import type { AlbumMetadata, EpisodeMetadata, UiMetadata } from "../lib/types";
-import DynamicBackground from "./components-MIGRATE-ME/DynamicBackground";
-import PlayerControls from "./components-MIGRATE-ME/PlayerControls/PlayerControls";
-import Screensaver from "./components-MIGRATE-ME/Screensaver";
+import DynamicBackground from "./DynamicBackground";
 import SvgMusic from "./icons/bx-music.svg";
+import PlayerControls from "./PlayerControls/PlayerControls";
+import Screensaver from "./Screensaver";
 
 const PREVIEW_SIZE = 400;
 

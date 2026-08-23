@@ -1,13 +1,16 @@
 import { createFileRoute } from "@tanstack/solid-router";
 import { createEffect, createSignal } from "solid-js";
-import { getAuthTokenSignal } from "../components/components-MIGRATE-ME/hooks/useSpotifyAuth";
+import {
+	getAuthTokenSignal,
+	useSpotifyAuth,
+} from "../lib/hooks/useSpotifyAuth";
 
 export const Route = createFileRoute("/")({ component: App });
 
 const CARD_SIZE = 715;
 
 function App() {
-	// useSpotifyAuth();
+	useSpotifyAuth();
 	const [isAuthenticated, setIsAuthenticated] = createSignal(false);
 	const [showAuthError, setShowAuthError] = createSignal(false);
 
