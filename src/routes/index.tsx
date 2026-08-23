@@ -1,48 +1,47 @@
+import { useQuery } from "@tanstack/solid-query";
 import { createFileRoute } from "@tanstack/solid-router";
-import { createEffect, createSignal } from "solid-js";
 import SpotifyNowPlaying from "../components/SpotifyNowPlaying";
-import {
-	getAuthTokenSignal,
-	useSpotifyAuth,
-} from "../lib/hooks/useSpotifyAuth";
+import { orpc } from "../lib/orpc/client";
 
 export const Route = createFileRoute("/")({ component: App });
 
 const CARD_SIZE = 715;
 
 function App() {
-	useSpotifyAuth();
-	const [isAuthenticated, setIsAuthenticated] = createSignal(false);
-	const [showAuthError, setShowAuthError] = createSignal(false);
+	// useSpotifyAuth();
+	// const [isAuthenticated, setIsAuthenticated] = createSignal(false);
+	// const [showAuthError, setShowAuthError] = createSignal(false);
 
-	createEffect(
-		() => getAuthTokenSignal(),
-		() => {
-			let timerReference: NodeJS.Timeout | null = null;
+	const isAuthenticated = useQuery(() => orpc.auth.isAuthorized.queryOptions());
 
-			// Wait a little bit, then if we're still not authenticated show an error
-			timerReference = setTimeout(() => {
-				if (!getAuthTokenSignal?.()) {
-					setShowAuthError(true);
-				}
-			}, 2000);
+	// createEffect(
+	// 	() => getAuthTokenSignal(),
+	// 	() => {
+	// 		let timerReference: NodeJS.Timeout | null = null;
 
-			// Check to see if we're authenticated
-			if (getAuthTokenSignal?.() && getAuthTokenSignal?.().length > 0) {
-				clearTimeout(timerReference);
-				setIsAuthenticated(true);
-				setShowAuthError(false);
-			}
+	// 		// Wait a little bit, then if we're still not authenticated show an error
+	// 		timerReference = setTimeout(() => {
+	// 			if (!getAuthTokenSignal?.()) {
+	// 				setShowAuthError(true);
+	// 			}
+	// 		}, 2000);
 
-			return () => {
-				if (timerReference) clearTimeout(timerReference);
-			};
-		},
-	);
+	// 		// Check to see if we're authenticated
+	// 		if (getAuthTokenSignal?.() && getAuthTokenSignal?.().length > 0) {
+	// 			clearTimeout(timerReference);
+	// 			setIsAuthenticated(true);
+	// 			setShowAuthError(false);
+	// 		}
+
+	// 		return () => {
+	// 			if (timerReference) clearTimeout(timerReference);
+	// 		};
+	// 	},
+	// );
 
 	return (
 		<main>
-			{isAuthenticated() && (
+			{isAuthenticated.data?.is_authorized && (
 				<div class="flex items-center justify-center w-screen h-screen text-white">
 					<div
 						class="relative flex"
@@ -67,7 +66,7 @@ function App() {
 					</div>
 				</div>
 			)}
-			{showAuthError() && (
+			{!isAuthenticated.data?.is_authorized && (
 				<div class="grid items-center justify-center h-screen">
 					<p class="text-white text-center max-w-sm">
 						Unable to authenticate with API. Have you set the proper auth tokens

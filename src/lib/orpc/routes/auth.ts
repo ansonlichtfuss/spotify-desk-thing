@@ -1,16 +1,12 @@
-import { ORPCError } from "@orpc/client";
-import { createServerOnlyFn } from "@tanstack/solid-start";
+import { differenceInHours } from "date-fns/differenceInHours";
 import { z } from "zod";
-import { getRefreshToken } from "../../token-fs";
+import {
+	getRefreshTokenData,
+	getSpotifyClientId,
+	getSpotifyClientSecret,
+} from "../../token-fs";
 import { OAUTH_REDIRECT_URI, SPOTIFY_API_URLS } from "../constants";
 import { base } from "../handler";
-
-const getSpotifyClientId = createServerOnlyFn(
-	() => process.env.SPOTIFY_CLIENT_ID,
-);
-const getSpotifyClientSecret = createServerOnlyFn(
-	() => process.env.SPOTIFY_CLIENT_SECRET,
-);
 
 export type SpotifyAuthState = {
 	access_token: string;
@@ -21,50 +17,14 @@ export type SpotifyAuthState = {
 	timerReference: number;
 };
 
-export const accessToken = base.handler(async () => {
-	try {
-		const client_id = getSpotifyClientId();
-		const client_secret = getSpotifyClientSecret();
-		const refresh_token = await getRefreshToken();
-		console.log("hey tiff TOKENS", { client_id, client_secret, refresh_token });
-		const basic = btoa(`${client_id}:${client_secret}`);
+export const isAuthorized = base.handler(async () => {
+	const refreshTokenData = await getRefreshTokenData();
 
-		const res = await fetch(SPOTIFY_API_URLS.token, {
-			method: "POST",
-			headers: {
-				Authorization: `Basic ${basic}`,
-				"Content-Type": "application/x-www-form-urlencoded",
-			},
-			body: new URLSearchParams({
-				grant_type: "refresh_token",
-				refresh_token,
-			}),
-		});
-
-		const json = await res.json();
-		if (res.ok) {
-			return json;
-		}
-
-		if (json?.error) {
-			// setRefreshToken("token_expired_or_missing");
-			return new ORPCError("UNAUTHORIZED", {
-				message: json.error,
-				// optional: pass the original error to retain stack trace
-				data: json,
-			});
-		}
-	} catch (e: any) {
-		if (e?.code === "UNAUTHORIZED") {
-			return new ORPCError("UNAUTHORIZED", {
-				data: e,
-			});
-		} else {
-			return new ORPCError("INTERNAL_SERVER_ERROR", {
-				data: e,
-			});
-		}
-	}
+	return {
+		is_authorized:
+			refreshTokenData?.expiration &&
+			differenceInHours(refreshTokenData.expiration, new Date()) > 24,
+	};
 });
 
 export const refreshToken = base

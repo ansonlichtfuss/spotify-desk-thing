@@ -2,9 +2,10 @@ import { ORPCError } from "@orpc/client";
 import * as z from "zod";
 import { SPOTIFY_API_URLS } from "../constants";
 import { base } from "../handler";
+import { spotifyFetchWithToken } from "../spotify-env";
 
 export const nowPlaying = base.handler(async ({ context }) => {
-	const res = await fetch(SPOTIFY_API_URLS.now_playing, {
+	const res = await spotifyFetchWithToken(SPOTIFY_API_URLS.now_playing, {
 		headers: {
 			Authorization: context.reqHeaders?.get("Authorization") ?? "",
 		},
@@ -30,7 +31,7 @@ export const saved = base
 	.input(z.object({ ids: z.string().array() }))
 	.handler(async ({ input, context }) => {
 		// const searchParams = new URL(ctx.req.url).searchParams;
-		const response = await fetch(
+		const response = await spotifyFetchWithToken(
 			`${SPOTIFY_API_URLS.saved}?` +
 				new URLSearchParams({
 					ids: `${input.ids.join(",")}`,

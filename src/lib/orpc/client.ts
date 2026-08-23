@@ -5,7 +5,6 @@ import { createRouterClient } from "@orpc/server";
 import { createTanstackQueryUtils } from "@orpc/tanstack-query";
 import { createIsomorphicFn } from "@tanstack/solid-start";
 import { getRequestHeaders } from "@tanstack/solid-start/server";
-import { getAuthTokenSignal } from "../hooks/useSpotifyAuth";
 import * as routes from "./routes";
 
 const getORPCClient = createIsomorphicFn()
@@ -26,10 +25,6 @@ const getORPCClient = createIsomorphicFn()
 	.client((): RouterClient<typeof routes> => {
 		const link = new RPCLink({
 			url: "/api/rpc",
-			headers: () => {
-				const token = getAuthTokenSignal();
-				return token ? { authorization: `Bearer ${token}` } : {};
-			},
 		});
 
 		return createORPCClient(link);

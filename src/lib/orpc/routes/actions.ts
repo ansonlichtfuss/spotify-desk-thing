@@ -2,9 +2,10 @@ import { ORPCError } from "@orpc/client";
 import { z } from "zod";
 import { SPOTIFY_API_URLS } from "../constants";
 import { base } from "../handler";
+import { spotifyFetchWithToken } from "../spotify-env";
 
 export const pause = base.handler(async ({ context }) => {
-	const response = await fetch(SPOTIFY_API_URLS.pause, {
+	const response = await spotifyFetchWithToken(SPOTIFY_API_URLS.pause, {
 		method: "PUT",
 		headers: {
 			Authorization: context.reqHeaders?.get("Authorization") ?? "",
@@ -19,7 +20,7 @@ export const pause = base.handler(async ({ context }) => {
 });
 
 export const play = base.handler(async ({ context }) => {
-	const response = await fetch(SPOTIFY_API_URLS.play, {
+	const response = await spotifyFetchWithToken(SPOTIFY_API_URLS.play, {
 		method: "PUT",
 		headers: {
 			Authorization: context.reqHeaders?.get("Authorization") ?? "",
@@ -34,7 +35,7 @@ export const play = base.handler(async ({ context }) => {
 });
 
 export const previous = base.handler(async ({ context }) => {
-	const response = await fetch(SPOTIFY_API_URLS.previous, {
+	const response = await spotifyFetchWithToken(SPOTIFY_API_URLS.previous, {
 		method: "POST",
 		headers: {
 			Authorization: context.reqHeaders?.get("Authorization") ?? "",
@@ -49,7 +50,7 @@ export const previous = base.handler(async ({ context }) => {
 });
 
 export const next = base.handler(async ({ context }) => {
-	const response = await fetch(SPOTIFY_API_URLS.next, {
+	const response = await spotifyFetchWithToken(SPOTIFY_API_URLS.next, {
 		method: "POST",
 		headers: {
 			Authorization: context.reqHeaders?.get("Authorization") ?? "",
@@ -67,7 +68,7 @@ export const shuffle = base
 	.input(z.object({ state: z.boolean() }))
 	.handler(async ({ input, context }) => {
 		// const searchParams = new URL(context.req.url).searchParams;
-		const response = await fetch(
+		const response = await spotifyFetchWithToken(
 			`${SPOTIFY_API_URLS.shuffle}?` +
 				new URLSearchParams({
 					state: input.state ? "true" : "false",

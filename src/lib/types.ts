@@ -16,3 +16,8 @@ export interface UiMetadata {
 	subtitle: string;
 	missingNowPlayingContext?: boolean;
 }
+
+export interface TokenFile {
+	token: string;
+	expiration: Date;
+}
