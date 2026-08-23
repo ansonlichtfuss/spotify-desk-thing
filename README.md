@@ -1,69 +1,157 @@
-![Screenshot of Spotify Desk Thing now playing UI](/readme-thumbnail.jpg?raw=true)
+Welcome to your new TanStack Start app!
 
-# Spotify Desk Thing
+# Getting Started
 
-<img align="right" src="/readme-irl-pictures.gif?raw=true" alt="Animate GIF showing the real-life implementation of this project" style="width:180px;">
+To run this application:
 
-A web-based clone of the Spotify Car Thing's now playing UI. Provides control via the Spotify API instead of Bluetooth (no need to pair devices and it can control most playback scenarios). Requires a Premium Spotify account.
-
-Made for the [Hyperpixel 4 Square Touch](https://shop.pimoroni.com/products/hyperpixel-4-square?variant=30138251444307) display, using a Raspberry Pi 3A.
-
-Written in [SolidJS](https://www.solidjs.com) using [SolidStart](https://start.solidjs.com/getting-started/what-is-solidstart). The core now playing screen and play/pause functionality is working, more functionality to be added later.
-
-## Setup
-
-1. Clone the repo onto your local computer, then install dependencies:
-
-```
-pnpm i
+```bash
+pnpm install
+pnpm run dev
 ```
 
-2. Create an OAuth application in the Spotify Developer API portal: https://developer.spotify.com/dashboard
-3. Add these redirect URLs to the OAuth application config
+# Building For Production
 
-```
-http://127.0.0.1:3000/auth/callback
-http://127.0.0.1:3000
-```
+To build this application for production:
 
-4. Make a copy of the `.env.example` file as `.env`, then enter the Spotify Client ID and secret in the env file fields. We will get the refresh token in a moment.
-
-5. Start the development version of the application
-
-```
-pnpm dev
+```bash
+pnpm run build
 ```
 
-6. Navigate your browser to `127.0.0.1:3000/auth/initialize` to authenticate with Spotify. After granting access the refresh token will be displayed on screen. Copy this into the env file field for refresh token.
+## Styling
 
-7. Stop the previous development run of the app, then build and start the production version
+This project uses [Tailwind CSS](https://tailwindcss.com/) for styling.
 
+### Removing Tailwind CSS
+
+If you prefer not to use Tailwind CSS:
+
+1. Remove the demo pages in `src/routes/demo/`
+2. Replace the Tailwind import in `src/styles.css` with your own styles
+3. Remove `tailwindcss()` from the plugins array in `vite.config.ts`
+4. Remove `@tailwindcss/vite` and `tailwindcss` from `package.json`
+
+
+## T3Env
+
+- You can use T3Env to add type safety to your environment variables.
+- Add Environment variables to the `src/env.mjs` file.
+- Use the environment variables in your code.
+
+### Usage
+
+```ts
+import { env } from "@/env";
+
+console.log(env.VITE_APP_TITLE);
 ```
-pnpm build
-pnpm start
+
+
+
+
+
+
+## Routing
+
+This project uses [TanStack Router](https://tanstack.com/router) with file-based routing. Routes are managed as files in `src/routes`.
+
+### Adding A Route
+
+To add a new route to your application just add a new file in the `./src/routes` directory.
+
+TanStack will automatically generate the content of the route file for you.
+
+Now that you have two routes you can use a `Link` component to navigate between them.
+
+### Adding Links
+
+To use SPA (Single Page Application) navigation you will need to import the `Link` component from `@tanstack/solid-router`.
+
+```tsx
+import { Link } from "@tanstack/solid-router";
 ```
 
-8. The app should now be fully functional. Navigate to `127.0.0.1:3000` and play a song on your Spotify account (wait up to 15 seconds or refresh the page to see the now playing screen).
+Then anywhere in your JSX you can use it like so:
 
-## Running on Raspberry Pi
+```tsx
+<Link to="/about">About</Link>
+```
 
-This application runs as a Node-based web app, which can be displayed in any browser. For my setup, I have a Raspberry PI 3A running [DietPi](https://dietpi.com) configured to automatically launch Chromium with a tab opened to the location and port of the UI (could be `127.0.0.1:3000`, I have the server running in a Docker container on my NAS on my local network).
+This will create a link that will navigate to the `/about` route.
 
-- This repo includes the Dockerfile I use for my own self-hosted setup. Check the network settings, as they might be different depending on the environment.
+More information on the `Link` component can be found in the [Link documentation](https://tanstack.com/router/v1/docs/framework/solid/api/router/linkComponent).
 
-## Wish list
+### Using A Layout
 
-- Custom podcast controls
-- Investigate other playback scenarios like when DJ is speaking
-- Copy better background color generation logic from the source code reconstruction:
-  - https://github.com/Merlin04/superbird-webapp/blob/ccec5307cd89b1b70996f1e67de6125a91ae3929/helpers/ColorExtractor.ts
+In the File Based Routing setup the layout is located in `src/routes/__root.tsx`. Anything you add to the root route will appear in all the routes.
 
----
+More information on layouts can be found in the [Layouts documentation](https://tanstack.com/router/latest/docs/framework/solid/guide/routing-concepts#layouts).
 
-Credit: Other folks rooting and discovering the Spotify Car Thing is a web view running Chromium
+## Server Functions
 
-- https://github.com/err4o4/spotify-car-thing-reverse-engineering/issues
-- Icons:
-  - Font Awesome
-  - https://thenounproject.com/icon/add-button-3387958/
-  - https://thenounproject.com/icon/tick-3923816/
+TanStack Start provides server functions that allow you to write server-side code that seamlessly integrates with your client components.
+
+```tsx
+import { createServerFn } from '@tanstack/solid-start'
+
+const getServerTime = createServerFn({
+  method: 'GET',
+}).handler(async () => {
+  return new Date().toISOString()
+})
+```
+
+## Data Fetching
+
+There are multiple ways to fetch data in your application. You can use TanStack Query to fetch data from a server. But you can also use the `loader` functionality built into TanStack Router to load the data for a route before it's rendered.
+
+For example:
+
+```tsx
+import { createFileRoute } from '@tanstack/solid-router'
+
+export const Route = createFileRoute('/people')({
+  loader: async () => {
+    const response = await fetch('https://swapi.dev/api/people')
+    return response.json()
+  },
+  component: PeopleComponent,
+})
+
+function PeopleComponent() {
+  const data = Route.useLoaderData()
+  return (
+    <ul>
+      <For each={data().results}>
+        {(person) => <li>{person.name}</li>}
+      </For>
+    </ul>
+  )
+}
+```
+
+Loaders simplify your data fetching logic dramatically. Check out more information in the [Loader documentation](https://tanstack.com/router/latest/docs/framework/solid/guide/data-loading#loader-parameters).
+
+
+# Demo files
+
+Files prefixed with `demo` can be safely deleted. They are there to provide a starting point for you to play around with the features you've installed.
+
+
+
+## Linting & Formatting
+
+This project uses [Biome](https://biomejs.dev/) for linting and formatting. The following scripts are available:
+
+
+```bash
+pnpm run lint
+pnpm run format
+pnpm run check
+```
+
+
+# Learn More
+
+You can learn more about all of the offerings from TanStack in the [TanStack documentation](https://tanstack.com).
+
+For TanStack Start specific documentation, visit [TanStack Start](https://tanstack.com/start).

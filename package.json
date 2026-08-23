@@ -1,36 +1,45 @@
 {
-  "name": "spotify-desk-thing",
+  "name": "solid2-rebuilt",
+  "private": true,
   "type": "module",
   "scripts": {
-    "dev": "vinxi dev --host",
-    "build": "vinxi build",
-    "start": "vinxi start"
+    "dev": "vite dev --port 3000",
+    "generate-routes": "tsr generate",
+    "build": "vite build",
+    "start": "node .output/server/index.mjs",
+    "preview": "vite preview",
+    "format": "biome format",
+    "lint": "biome lint",
+    "check": "biome check"
   },
   "dependencies": {
-    "@fontsource-variable/plus-jakarta-sans": "^5.3.0",
-    "@solidjs/router": "^0.15.3",
-    "@solidjs/start": "^1.2.0",
-    "@tanstack/solid-query": "5.101.4",
-    "@trpc/client": "^10.45.2",
-    "@trpc/server": "^10.45.2",
-    "@types/spotify-api": "^0.0.25",
-    "@unocss/preset-wind": "^66.7.5",
-    "@unocss/reset": "^66.7.5",
-    "cross-fetch": "^4.1.0",
-    "date-fns": "^4.4.0",
-    "extract-colors": "^4.2.1",
-    "prettier": "^3.9.6",
-    "solid-js": "^1.9.14",
-    "solid-start-trpc": "^0.0.16",
-    "solid-trpc": "0.0.11-rc.3",
-    "typescript": "^5.9.3",
-    "undici": "^7.16.0",
-    "unocss": "^66.7.5",
-    "vinxi": "^0.5.11",
+    "@orpc/client": "2.0.0-beta.30",
+    "@orpc/server": "2.0.0-beta.30",
+    "@orpc/tanstack-query": "2.0.0-beta.30",
+    "@solidjs/web": "2.0.0-rc.1",
+    "@t3-oss/env-core": "^0.13.10",
+    "@tailwindcss/vite": "^4.1.18",
+    "@tanstack/solid-query": "6.0.0-rc.0",
+    "@tanstack/solid-query-devtools": "6.0.0-rc.0",
+    "@tanstack/solid-router": "2.0.0-rc.1",
+    "@tanstack/solid-router-devtools": "2.0.0-rc.1",
+    "@tanstack/solid-start": "2.0.0-rc.1",
+    "solid-js": "2.0.0-rc.1",
+    "tailwindcss": "^4.1.18",
     "zod": "^4.4.3"
   },
-  "engines": {
-    "node": ">=18"
+  "devDependencies": {
+    "@biomejs/biome": "2.5.10",
+    "@tanstack/devtools-vite": "latest",
+    "@tanstack/router-cli": "^1.133.21",
+    "typescript": "^7.0.2",
+    "vite": "^8.0.0",
+    "vite-plugin-solid": "^3.0.0-next.27"
   },
-  "packageManager": "pnpm@11.18.0+sha512.33d83c77da82f49fba836925c6f1b841181ec3132b670639bd012f7075f5c7cf634c5f870147c19aae7478fac01df09d8892e880454896edd23ee9b33757563c"
+  "pnpm": {
+    "onlyBuiltDependencies": [
+      "esbuild",
+      "lightningcss"
+    ]
+  }
 }
