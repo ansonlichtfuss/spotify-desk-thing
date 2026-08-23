@@ -5,9 +5,9 @@ import {
 	HeadContent,
 	Scripts,
 } from "@tanstack/solid-router";
-import Header from "../components/Header";
 import { queryClient } from "../lib/query-client";
 import styleCss from "../styles.css?url";
+import "@fontsource-variable/plus-jakarta-sans";
 
 export const Route = createRootRouteWithContext()({
 	head: () => ({
@@ -33,7 +33,6 @@ function RootComponent(props: { children: JSX.Element }) {
 			>
 				<Loading>
 					<QueryClientProvider client={queryClient}>
-						<Header />
 						{props.children}
 						{/* <TanStackRouterDevtools /> */}
 						{/* <SolidQueryDevtools buttonPosition="bottom-right" /> */}

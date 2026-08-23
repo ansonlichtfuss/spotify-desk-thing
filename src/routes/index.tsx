@@ -14,7 +14,7 @@ function App() {
 	createEffect(
 		() => getAuthTokenSignal(),
 		() => {
-			let timerReference = null;
+			let timerReference: NodeJS.Timeout | null = null;
 
 			// Wait a little bit, then if we're still not authenticated show an error
 			timerReference = setTimeout(() => {
