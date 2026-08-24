@@ -1,41 +1,13 @@
 import { useQuery } from "@tanstack/solid-query";
 import { type Component, createEffect, createMemo } from "solid-js";
+import { mapTrackMetadata } from "../lib/map-metadata";
 import { orpc } from "../lib/orpc/client";
-import type { AlbumMetadata, EpisodeMetadata, UiMetadata } from "../lib/types";
 import { DynamicBackground } from "./DynamicBackground";
 import SvgMusic from "./icons/bx-music.svg";
 import { PlayerControls } from "./PlayerControls/PlayerControls";
 import { Screensaver } from "./Screensaver";
 
 const PREVIEW_SIZE = 400;
-
-const getAlbumMetadata = ({
-	album,
-	name,
-}: {
-	album: AlbumMetadata;
-	name: string;
-}) => ({
-	preview: album.images[0].url,
-	title: name,
-	subtitle: album.artists.map((artist) => artist.name).join(", "),
-});
-
-const getEpisodeMetadata = (episode: EpisodeMetadata) => ({
-	preview: episode.images[0].url,
-	title: episode.name,
-	subtitle: episode.show.name,
-});
-
-const metadataMappers: Record<
-	SpotifyApi.CurrentlyPlayingObject["currently_playing_type"],
-	(item: any) => UiMetadata
-> = {
-	track: getAlbumMetadata,
-	episode: getEpisodeMetadata,
-	ad: (e) => e, // TODO
-	unknown: (e) => e, // TODO
-};
 
 export const SpotifyNowPlaying: Component = () => {
 	const nowPlayingQuery = useQuery(() =>
@@ -74,27 +46,9 @@ export const SpotifyNowPlaying: Component = () => {
 		},
 	);
 
-	const metadata = createMemo<UiMetadata>(() => {
-		const mapperKey = nowPlayingQuery.data?.currently_playing_type ?? "track";
-		const mapper = metadataMappers[mapperKey];
-
-		const mapAttempt =
-			mapper &&
-			nowPlayingQuery.data?.item &&
-			mapper(nowPlayingQuery.data?.item);
-
-		if (!mapAttempt) {
-			return {
-				preview: "",
-				title: "",
-				subtitle: "",
-				missingNowPlayingContext: true,
-				showScreensaver: true,
-			};
-		} else {
-			return { ...mapAttempt, showScreensaver: false };
-		}
-	});
+	const metadata = createMemo(() =>
+		mapTrackMetadata(nowPlayingQuery.data?.item),
+	);
 
 	return (
 		<div class="w-full h-full">
