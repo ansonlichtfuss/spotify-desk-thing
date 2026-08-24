@@ -15,7 +15,7 @@ RUN pnpm i --frozen-lockfile
 COPY . .
 RUN pnpm build
 
-CMD [ "pnpm", "start", "--port", "8787" ]
+CMD [ "PORT=8787", "pnpm", "start",  ]
 
 # docker stop spotify-desk-thing; docker rm spotify-desk-thing
 # docker build -t spotify-desk-thing/latest --network host .
