@@ -8,14 +8,14 @@ import SvgSkipNext from "../icons/bx-skip-next.svg";
 import SvgSkipPrevious from "../icons/bx-skip-previous.svg";
 import SvgPlusCircle from "../icons/noun-add-button.svg";
 import SvgCheckmarkCircle from "../icons/noun-tick.svg";
-import PlayerControlIcon from "./PlayerControlIcon";
-import PlayerProgressBar from "./PlayerProgressBar";
+import { PlayerControlIcon } from "./PlayerControlIcon";
+import { PlayerProgressBar } from "./PlayerProgressBar";
 
 interface PlayerControlsType {
 	isSaved: boolean;
 }
 
-const PlayerControls: Component<PlayerControlsType> = (props) => {
+export const PlayerControls: Component<PlayerControlsType> = (props) => {
 	const nowPlayingQuery = useQuery(() =>
 		orpc.metadata.nowPlaying.queryOptions(),
 	);
@@ -73,29 +73,28 @@ const PlayerControls: Component<PlayerControlsType> = (props) => {
 			<PlayerControlIcon
 				src={SvgSkipPrevious}
 				isDisabled={shouldDisableControls()}
-				enlargeIcon={true}
-				onClick={setPrevious.mutate}
+				onClick={() => setPrevious.mutate()}
 			/>
 			{nowPlayingQuery.data?.is_playing ? (
 				<PlayerControlIcon
 					src={SvgPause}
 					isDisabled={shouldDisableControls()}
 					enlargeIcon={true}
-					onClick={setPause.mutate}
+					onClick={() => setPause.mutate()}
 				/>
 			) : (
 				<PlayerControlIcon
 					src={SvgPlay}
 					isDisabled={shouldDisableControls()}
 					enlargeIcon={true}
-					onClick={setPlay.mutate}
+					onClick={() => setPlay.mutate()}
 				/>
 			)}
 			<PlayerControlIcon
 				src={SvgSkipNext}
 				isDisabled={shouldDisableControls()}
 				enlargeIcon={true}
-				onClick={setNext.mutate}
+				onClick={() => setNext.mutate()}
 			/>
 			<PlayerControlIcon
 				src={props.isSaved ? SvgCheckmarkCircle : SvgPlusCircle}
@@ -104,5 +103,3 @@ const PlayerControls: Component<PlayerControlsType> = (props) => {
 		</div>
 	);
 };
-
-export default PlayerControls;

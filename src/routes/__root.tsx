@@ -1,4 +1,4 @@
-import { HydrationScript, type JSX, Loading } from "@solidjs/web";
+import { type JSX, Loading } from "@solidjs/web";
 import { QueryClientProvider } from "@tanstack/solid-query";
 import {
 	createRootRouteWithContext,
@@ -24,7 +24,6 @@ function RootComponent(props: { children: JSX.Element }) {
 				<meta charset="utf-8" />
 				<meta name="viewport" content="width=device-width, initial-scale=1" />
 				<meta name="theme-color" content="#000000" />
-				<HydrationScript />
 				<HeadContent />
 			</head>
 			<body

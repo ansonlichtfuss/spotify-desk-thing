@@ -1,44 +1,14 @@
 import { useQuery } from "@tanstack/solid-query";
 import { createFileRoute } from "@tanstack/solid-router";
-import SpotifyNowPlaying from "../components/SpotifyNowPlaying";
+import { SpotifyNowPlaying } from "../components/SpotifyNowPlaying";
 import { orpc } from "../lib/orpc/client";
 
-export const Route = createFileRoute("/")({ component: App });
+export const Route = createFileRoute("/")({ component: App, ssr: false });
 
 const CARD_SIZE = 715;
 
 function App() {
-	// useSpotifyAuth();
-	// const [isAuthenticated, setIsAuthenticated] = createSignal(false);
-	// const [showAuthError, setShowAuthError] = createSignal(false);
-
 	const isAuthenticated = useQuery(() => orpc.auth.isAuthorized.queryOptions());
-
-	// createEffect(
-	// 	() => getAuthTokenSignal(),
-	// 	() => {
-	// 		let timerReference: NodeJS.Timeout | null = null;
-
-	// 		// Wait a little bit, then if we're still not authenticated show an error
-	// 		timerReference = setTimeout(() => {
-	// 			if (!getAuthTokenSignal?.()) {
-	// 				setShowAuthError(true);
-	// 			}
-	// 		}, 2000);
-
-	// 		// Check to see if we're authenticated
-	// 		if (getAuthTokenSignal?.() && getAuthTokenSignal?.().length > 0) {
-	// 			clearTimeout(timerReference);
-	// 			setIsAuthenticated(true);
-	// 			setShowAuthError(false);
-	// 		}
-
-	// 		return () => {
-	// 			if (timerReference) clearTimeout(timerReference);
-	// 		};
-	// 	},
-	// );
-
 	return (
 		<main>
 			{isAuthenticated.data?.is_authorized && (

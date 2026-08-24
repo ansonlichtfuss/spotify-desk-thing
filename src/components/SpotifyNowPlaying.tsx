@@ -1,16 +1,11 @@
 import { useQuery } from "@tanstack/solid-query";
-import {
-	type Component,
-	createEffect,
-	createMemo,
-	createSignal,
-} from "solid-js";
+import { type Component, createEffect, createMemo } from "solid-js";
 import { orpc } from "../lib/orpc/client";
 import type { AlbumMetadata, EpisodeMetadata, UiMetadata } from "../lib/types";
-import DynamicBackground from "./DynamicBackground";
+import { DynamicBackground } from "./DynamicBackground";
 import SvgMusic from "./icons/bx-music.svg";
-import PlayerControls from "./PlayerControls/PlayerControls";
-import Screensaver from "./Screensaver";
+import { PlayerControls } from "./PlayerControls/PlayerControls";
+import { Screensaver } from "./Screensaver";
 
 const PREVIEW_SIZE = 400;
 
@@ -42,8 +37,7 @@ const metadataMappers: Record<
 	unknown: (e) => e, // TODO
 };
 
-const SpotifyNowPlaying: Component = () => {
-	const [showScreensaver, setShowScreensaver] = createSignal(true);
+export const SpotifyNowPlaying: Component = () => {
 	const nowPlayingQuery = useQuery(() =>
 		orpc.metadata.nowPlaying.queryOptions(),
 	);
@@ -55,18 +49,19 @@ const SpotifyNowPlaying: Component = () => {
 	);
 
 	createEffect(
-		() => nowPlayingQuery.data,
-		() => {
-			const thisNowPlaying = nowPlayingQuery.data;
-			let refreshTimeout = thisNowPlaying?.is_playing ? 8000 : 15000;
-			if (thisNowPlaying !== undefined) {
-				const songDuration = thisNowPlaying?.item?.duration_ms ?? 0;
-				const currentProgress = thisNowPlaying?.progress_ms ?? 0;
+		() => ({
+			is_playing: nowPlayingQuery.data?.is_playing,
+			duration_ms: nowPlayingQuery.data?.item?.duration_ms,
+			progress_ms: nowPlayingQuery.data?.progress_ms,
+		}),
+		({ is_playing, duration_ms, progress_ms }) => {
+			let refreshTimeout = is_playing ? 8000 : 15000;
+			const songDuration = duration_ms ?? 0;
+			const currentProgress = progress_ms ?? 0;
 
-				const timeLeftOnSong = songDuration - currentProgress;
-				if (thisNowPlaying?.is_playing && timeLeftOnSong < refreshTimeout) {
-					refreshTimeout = timeLeftOnSong + 1000;
-				}
+			const timeLeftOnSong = songDuration - currentProgress;
+			if (is_playing && timeLeftOnSong < refreshTimeout) {
+				refreshTimeout = timeLeftOnSong + 1000;
 			}
 
 			const interval = setInterval(
@@ -89,24 +84,21 @@ const SpotifyNowPlaying: Component = () => {
 			mapper(nowPlayingQuery.data?.item);
 
 		if (!mapAttempt) {
-			setShowScreensaver(true);
 			return {
 				preview: "",
 				title: "",
 				subtitle: "",
 				missingNowPlayingContext: true,
+				showScreensaver: true,
 			};
 		} else {
-			if (showScreensaver()) {
-				setShowScreensaver(false);
-			}
-			return mapAttempt;
+			return { ...mapAttempt, showScreensaver: false };
 		}
 	});
 
 	return (
 		<div class="w-full h-full">
-			{showScreensaver() ? (
+			{metadata().showScreensaver ? (
 				<Screensaver />
 			) : (
 				<DynamicBackground imgUrl={metadata()?.preview}>
@@ -152,5 +144,3 @@ const SpotifyNowPlaying: Component = () => {
 		</div>
 	);
 };
-
-export default SpotifyNowPlaying;

@@ -4,37 +4,36 @@ import {
 	createEffect,
 	createMemo,
 	createSignal,
-	onCleanup,
 } from "solid-js";
 import { orpc } from "../../lib/orpc/client";
 
-const PlayerProgressBar: Component = () => {
+export const PlayerProgressBar: Component = () => {
 	const [progressMs, setProgressMs] = createSignal(0);
 	const nowPlaying = useQuery(() => orpc.metadata.nowPlaying.queryOptions());
 
 	createEffect(
-		() => nowPlaying.data,
-		() => {
-			if (nowPlaying.data?.progress_ms) {
-				setProgressMs(nowPlaying.data.progress_ms);
+		() => nowPlaying.data?.progress_ms,
+		(progress_ms) => {
+			if (progress_ms !== undefined && progress_ms !== null) {
+				setProgressMs(progress_ms);
 			}
 		},
 	);
 
 	createEffect(
-		() => nowPlaying.data,
-		() => {
+		() => nowPlaying.data?.is_playing,
+		(is_playing) => {
 			let progressInterval: NodeJS.Timeout;
-			if (nowPlaying.data?.is_playing) {
+			if (is_playing) {
 				progressInterval = setInterval(
 					() => setProgressMs((current) => current + 1000),
 					1000,
 				);
 			}
 
-			onCleanup(() => {
+			return () => {
 				clearInterval(progressInterval);
-			});
+			};
 		},
 	);
 
@@ -49,7 +48,7 @@ const PlayerProgressBar: Component = () => {
 				style={{ height: "3px", "background-color": "rgba(0,0,0,0.2)" }}
 			></div>
 			<div
-				class="absolute top-0 left-0 w-full scale-x-0 origin-left bg-white"
+				class="absolute top-0 left-0 w-full origin-left bg-white"
 				style={{
 					height: "3px",
 					transform: `scaleX(${playingProgress()})`,
@@ -58,5 +57,3 @@ const PlayerProgressBar: Component = () => {
 		</div>
 	);
 };
-
-export default PlayerProgressBar;

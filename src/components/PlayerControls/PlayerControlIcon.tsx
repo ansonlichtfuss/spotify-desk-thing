@@ -1,4 +1,4 @@
-import type { Component, ParentProps } from "solid-js";
+import { type Component, createMemo, type ParentProps } from "solid-js";
 
 interface Props extends ParentProps {
 	src: string;
@@ -9,8 +9,8 @@ interface Props extends ParentProps {
 	onClick?: () => void;
 }
 
-const PlayerControlIcon: Component<Props> = (props) => {
-	const dimensions = props.enlargeIcon ? 72 : 48;
+export const PlayerControlIcon: Component<Props> = (props) => {
+	const dimensions = createMemo(() => (props.enlargeIcon ? 72 : 48));
 	return (
 		<button
 			type="button"
@@ -24,8 +24,8 @@ const PlayerControlIcon: Component<Props> = (props) => {
 				alt={props.alt}
 				class="group-hover:scale-105 "
 				src={props.src}
-				width={dimensions}
-				height={dimensions}
+				width={dimensions()}
+				height={dimensions()}
 			/>
 			{props.showActiveIndicator && (
 				<span
@@ -36,5 +36,3 @@ const PlayerControlIcon: Component<Props> = (props) => {
 		</button>
 	);
 };
-
-export default PlayerControlIcon;

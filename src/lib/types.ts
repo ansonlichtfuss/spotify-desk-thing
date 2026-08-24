@@ -14,6 +14,7 @@ export interface UiMetadata {
 	preview: string;
 	title: string;
 	subtitle: string;
+	showScreensaver?: boolean;
 	missingNowPlayingContext?: boolean;
 }
 

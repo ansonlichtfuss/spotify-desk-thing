@@ -1,7 +1,7 @@
 import type { Component } from "solid-js";
 import SvgSpotifyWhite from "./icons/spotify-white.svg";
 
-const Screensaver: Component = () => {
+export const Screensaver: Component = () => {
 	return (
 		<div class="w-full h-full bg-black flex items-center justify-center">
 			<img
@@ -14,5 +14,3 @@ const Screensaver: Component = () => {
 		</div>
 	);
 };
-
-export default Screensaver;

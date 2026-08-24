@@ -14,14 +14,14 @@ interface DynamicBackgroundType extends ParentProps {
 	imgUrl?: string;
 }
 
-const DynamicBackground: Component<DynamicBackgroundType> = (props) => {
+export const DynamicBackground: Component<DynamicBackgroundType> = (props) => {
 	const [accentColor, setAccentColor] = createSignal(DEFAULT_ACCENT_COLOR);
 
 	createEffect(
-		() => props,
-		() => {
-			if (props.imgUrl) {
-				extractColors(props.imgUrl, {
+		() => props.imgUrl,
+		(imgUrl) => {
+			if (imgUrl) {
+				extractColors(imgUrl, {
 					crossOrigin: "anonymous",
 					lightnessDistance: 0.1,
 				})
@@ -57,5 +57,3 @@ const DynamicBackground: Component<DynamicBackgroundType> = (props) => {
 		</div>
 	);
 };
-
-export default DynamicBackground;
