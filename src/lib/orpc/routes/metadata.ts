@@ -1,8 +1,14 @@
 import { ORPCError } from "@orpc/client";
 import * as z from "zod";
+import { getSyncedColor } from "../../color-sync";
+import { mapTrackMetadata } from "../../map-metadata";
 import { SPOTIFY_API_URLS } from "../constants";
 import { base } from "../handler";
 import { spotifyFetchWithToken } from "../spotify-env";
+
+type NowPlayingResponse = SpotifyApi.CurrentPlaybackResponse & {
+	color_sync: string;
+};
 
 export const nowPlaying = base.handler(async ({ context }) => {
 	const res = await spotifyFetchWithToken(SPOTIFY_API_URLS.now_playing, {
@@ -21,10 +27,18 @@ export const nowPlaying = base.handler(async ({ context }) => {
 	}
 
 	if (status === 204) {
-		return { is_playing: false } as SpotifyApi.CurrentPlaybackResponse;
+		return { is_playing: false } as NowPlayingResponse;
 	}
 
-	return (await res.json()) as SpotifyApi.CurrentPlaybackResponse;
+	const json = (await res.json()) as SpotifyApi.CurrentPlaybackResponse;
+
+	const metadata = mapTrackMetadata(json.item);
+	const color = await getSyncedColor(metadata.preview);
+
+	return {
+		color_sync: color,
+		...json,
+	} as NowPlayingResponse;
 });
 
 export const saved = base

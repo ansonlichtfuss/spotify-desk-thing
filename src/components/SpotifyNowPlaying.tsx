@@ -55,7 +55,10 @@ export const SpotifyNowPlaying: Component = () => {
 			{metadata().showScreensaver ? (
 				<Screensaver />
 			) : (
-				<DynamicBackground imgUrl={metadata()?.preview}>
+				<DynamicBackground
+					imgUrl={metadata()?.preview}
+					accentColor={nowPlayingQuery.data?.color_sync}
+				>
 					<div class="flex flex-col items-center">
 						<div
 							class="bg-gray-800 relative flex items-center justify-center color-gray-500"

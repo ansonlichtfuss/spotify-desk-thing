@@ -26,9 +26,10 @@
     "@tanstack/solid-router-devtools": "2.0.0-rc.1",
     "@tanstack/solid-start": "2.0.0-rc.1",
     "@types/spotify-api": "^0.0.26",
+    "colorthief": "^3.5.0",
     "date-fns": "^4.4.0",
-    "extract-colors": "^4.2.1",
     "nitro": "3.0.260610-beta",
+    "sharp": "^0.35.3",
     "solid-js": "2.0.0-rc.1",
     "tailwindcss": "^4.1.18",
     "zod": "^4.4.3"
