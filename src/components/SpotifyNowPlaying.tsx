@@ -61,7 +61,7 @@ export const SpotifyNowPlaying: Component = () => {
 				>
 					<div class="flex flex-col items-center">
 						<div
-							class="bg-gray-800 relative flex items-center justify-center color-gray-500"
+							class="bg-gray-800 relative flex items-center justify-center color-gray-500 ring-1 ring-black/20"
 							style={{
 								width: `${PREVIEW_SIZE}px`,
 								height: `${PREVIEW_SIZE}px`,
@@ -76,7 +76,7 @@ export const SpotifyNowPlaying: Component = () => {
 								/>
 							</div>
 							<div
-								class="relative z-10"
+								class="relative z-10 "
 								style={{
 									width: `${PREVIEW_SIZE}px`,
 									height: `${PREVIEW_SIZE}px`,
