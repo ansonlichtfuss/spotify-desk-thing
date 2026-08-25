@@ -23,9 +23,6 @@ importers:
       '@solidjs/web':
         specifier: 2.0.0-rc.1
         version: 2.0.0-rc.1(solid-js@2.0.0-rc.1)
-      '@t3-oss/env-core':
-        specifier: ^0.13.10
-        version: 0.13.11(typescript@7.0.2)(zod@4.4.3)
       '@tailwindcss/vite':
         specifier: ^4.1.18
         version: 4.3.3(vite@8.2.2(@types/node@26.2.0)(jiti@2.7.0))
@@ -913,23 +910,6 @@ packages:
 
   '@standardserver/shared@0.8.0':
     resolution: {integrity: sha512-z+w4hhiPeokm09Rwt172KlU4FHKVlCaw12nTQPYAD6xGrsProzH9Ex7/+qLtcSEwGWp8h0Fi6E8Z6dfyKXMNqw==}
-
-  '@t3-oss/env-core@0.13.11':
-    resolution: {integrity: sha512-sM7GYY+KL7H/Hl0BE0inWfk3nRHZOLhmVn7sHGxaZt9FAR6KqREXAE+6TqKfiavfXmpRxO/OZ2QgKRd+oiBYRQ==}
-    peerDependencies:
-      arktype: ^2.1.0
-      typescript: '>=5.0.0'
-      valibot: ^1.0.0-beta.7 || ^1.0.0
-      zod: ^3.24.0 || ^4.0.0
-    peerDependenciesMeta:
-      arktype:
-        optional: true
-      typescript:
-        optional: true
-      valibot:
-        optional: true
-      zod:
-        optional: true
 
   '@tailwindcss/node@4.3.3':
     resolution: {integrity: sha512-/T8IKEsf9VTU6tLjgC7+sv2mOPtQxzE2jMw7u4Tt40Tx+QSZxpzh95/H6cMKoja9XuW7iMdLJYBB0o9G1CaAgg==}
@@ -2993,11 +2973,6 @@ snapshots:
       '@standardserver/shared': 0.8.0
 
   '@standardserver/shared@0.8.0': {}
-
-  '@t3-oss/env-core@0.13.11(typescript@7.0.2)(zod@4.4.3)':
-    optionalDependencies:
-      typescript: 7.0.2
-      zod: 4.4.3
 
   '@tailwindcss/node@4.3.3':
     dependencies:
