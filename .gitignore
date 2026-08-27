@@ -14,11 +14,8 @@ __unconfig*
 .vercel
 .netlify
 .vinxi
+.cache
 netlify
-
-# App specific
-.token.refreshtoken
-.token.accesstoken
 
 # IDEs and editors
 /.idea
