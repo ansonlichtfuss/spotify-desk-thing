@@ -2,6 +2,7 @@ import { ORPCError } from "@orpc/client";
 import * as z from "zod";
 import { getSyncedColor } from "../../color-sync";
 import { mapTrackMetadata } from "../../map-metadata";
+import { fsGetThumbnailData, fsSetThumbnailData } from "../../token-fs";
 import { SPOTIFY_API_URLS } from "../constants";
 import { base } from "../handler";
 import { spotifyFetchWithToken } from "../spotify-env";
@@ -33,7 +34,16 @@ export const nowPlaying = base.handler(async ({ context }) => {
 	const json = (await res.json()) as SpotifyApi.CurrentPlaybackResponse;
 
 	const metadata = mapTrackMetadata(json.item);
-	const color = await getSyncedColor(metadata.preview);
+	let color: string;
+
+	// Try to avoid re-fetching the img on every call
+	const cachedThumbnailMetadata = await fsGetThumbnailData();
+	if (cachedThumbnailMetadata?.url === metadata.preview) {
+		color = cachedThumbnailMetadata.color;
+	} else {
+		color = await getSyncedColor(metadata.preview);
+		await fsSetThumbnailData({ url: metadata.preview, color });
+	}
 
 	return {
 		color_sync: color,
