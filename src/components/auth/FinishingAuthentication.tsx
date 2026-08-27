@@ -39,7 +39,7 @@ export const FinishingAuthentication = () => {
 			/>
 			{hasError() ? (
 				<p class="text-white text-center max-w-sm font-bold">
-					An error occurred logging in.
+					An error occurred while logging in.
 					<Link
 						to="/auth/initialize"
 						class="rounded bg-white px-8 py-2 inline mt-5"
