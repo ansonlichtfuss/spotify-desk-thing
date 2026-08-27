@@ -3,18 +3,18 @@ import { createServerOnlyFn } from "@tanstack/solid-start";
 import { addSeconds } from "date-fns/addSeconds";
 import { differenceInSeconds } from "date-fns/differenceInSeconds";
 import {
-	getAccessTokenData,
-	getRefreshTokenData,
+	fsGetAccessTokenData,
+	fsGetRefreshTokenData,
+	fsSetAccessTokenData,
 	getSpotifyClientId,
 	getSpotifyClientSecret,
-	setAccessTokenData,
 } from "../token-fs";
 import { SPOTIFY_API_URLS } from "./constants";
 
 const accessToken = createServerOnlyFn(async () => {
 	const client_id = getSpotifyClientId();
 	const client_secret = getSpotifyClientSecret();
-	const refreshTokenData = await getRefreshTokenData();
+	const refreshTokenData = await fsGetRefreshTokenData();
 	const basic = btoa(`${client_id}:${client_secret}`);
 
 	if (!refreshTokenData?.token) {
@@ -47,14 +47,14 @@ const accessToken = createServerOnlyFn(async () => {
 });
 
 const getSpotifyAccessToken = async (): Promise<string> => {
-	const accessTokenData = await getAccessTokenData();
+	const accessTokenData = await fsGetAccessTokenData();
 
 	if (
 		!accessTokenData?.expiration ||
 		differenceInSeconds(accessTokenData.expiration, new Date()) <= 60
 	) {
 		const accessTokenResponse = await accessToken();
-		setAccessTokenData({
+		fsSetAccessTokenData({
 			token: accessTokenResponse.access_token,
 			expiration: addSeconds(new Date(), 3600),
 		});

@@ -1,24 +1,35 @@
+import { addMonths } from "date-fns/addMonths";
+import { addSeconds } from "date-fns/addSeconds";
 import { differenceInHours } from "date-fns/differenceInHours";
 import { z } from "zod";
 import {
-	getRefreshTokenData,
+	fsGetRefreshTokenData,
+	fsSetAccessTokenData,
+	fsSetRefreshTokenData,
 	getSpotifyClientId,
 	getSpotifyClientSecret,
 } from "../../token-fs";
 import { OAUTH_REDIRECT_URI, SPOTIFY_API_URLS } from "../constants";
 import { base } from "../handler";
 
-export type SpotifyAuthState = {
+type SpotifyAuthResponse = {
 	access_token: string;
 	token_type: string;
 	expires_in: number;
+	refresh_token: string;
 	scope: string;
-	calculatedExpiration: Date;
-	timerReference: number;
 };
 
+export const clientId = base.handler(async () => {
+	const clientId = getSpotifyClientId();
+
+	return {
+		client_id: clientId,
+	};
+});
+
 export const isAuthorized = base.handler(async () => {
-	const refreshTokenData = await getRefreshTokenData();
+	const refreshTokenData = await fsGetRefreshTokenData();
 
 	return {
 		is_authorized:
@@ -47,7 +58,19 @@ export const refreshToken = base
 			}),
 		});
 
-		const response = await res.json();
+		const response: SpotifyAuthResponse = await res.json();
 
-		return response;
+		await fsSetRefreshTokenData({
+			token: response.refresh_token,
+			expiration: addMonths(new Date(), 6),
+		});
+
+		await fsSetAccessTokenData({
+			token: response.access_token,
+			expiration: addSeconds(new Date(), response.expires_in),
+		});
+
+		return {
+			success: true,
+		};
 	});

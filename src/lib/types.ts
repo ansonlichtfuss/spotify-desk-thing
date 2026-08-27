@@ -18,7 +18,17 @@ export interface UiMetadata {
 	missingNowPlayingContext?: boolean;
 }
 
-export interface TokenFile {
-	token: string;
-	expiration: Date;
+export interface CacheFile {
+	access_token?: {
+		token: string;
+		expiration: Date;
+	};
+	refresh_token?: {
+		token: string;
+		expiration: Date;
+	};
+	thumbnail?: {
+		url: string;
+		color: string;
+	};
 }
