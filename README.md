@@ -27,6 +27,8 @@ _Controls may be disabled when certain Spotify Connect devices are used, as the 
 
 - **Setup:** Faster setup with generalized Docker Compose support.
 
+  - **BREAKING CHANGE:** Environment variable names have changed, removing the `VITE_` prefix.
+
 - **Performance:** The app has been completely rewritten for [SolidJS v2](https://v2.solidjs.com/), migrated to [TanStack Start](https://tanstack.com/start/latest) and [ORPC](https://orpc.dev/docs/getting-started). Much of the codebase was cleaned up, duplicate/unused code removed for better maintainability.
 
 ---
@@ -46,6 +48,7 @@ git clone git@github.com:ansonlichtfuss/spotify-desk-thing.git
 ```
 http://127.0.0.1:8787/auth/callback
 http://127.0.0.1:8787
+<your_app_url>/auth/callback
 ```
 
 4. Make a copy of the `.env.example` file as `.env`, then enter the Spotify Client ID and secret in the env file fields.

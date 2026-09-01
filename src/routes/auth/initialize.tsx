@@ -8,7 +8,6 @@ export const Route = createFileRoute("/auth/initialize")({
 	component: AuthInitialize,
 });
 
-const redirect_uri = "http://127.0.0.1:3000/auth/callback";
 const scope = [
 	"streaming",
 	"user-modify-playback-state",
@@ -24,6 +23,7 @@ const scope = [
 
 function AuthInitialize() {
 	const query = useQuery(() => orpc.auth.clientId.queryOptions());
+	const redirect_uri = `http://${window.location.host}/auth/callback`;
 
 	createEffect(
 		() => ({

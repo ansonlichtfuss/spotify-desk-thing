@@ -37,7 +37,6 @@ const accessToken = createServerOnlyFn(async () => {
 	if (res.ok) {
 		return json;
 	} else {
-		// setRefreshToken("token_expired_or_missing");
 		return new ORPCError("UNAUTHORIZED", {
 			message: json.error,
 			// optional: pass the original error to retain stack trace
