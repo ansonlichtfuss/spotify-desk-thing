@@ -1,4 +1,5 @@
 import { useQuery } from "@tanstack/solid-query";
+import { createMemo } from "solid-js";
 import { orpc } from "../lib/orpc/client";
 import { UnableToAuthenticate } from "./auth/UnableToAuthenticate";
 import { SpotifyNowPlaying } from "./SpotifyNowPlaying";
@@ -7,9 +8,16 @@ const CARD_SIZE = 715;
 
 export const App = () => {
 	const isAuthenticated = useQuery(() => orpc.auth.isAuthorized.queryOptions());
+	const shouldShowAuthError = createMemo(() => {
+		if (isAuthenticated.isPending) {
+			return false;
+		}
+		return !isAuthenticated.data?.is_authorized;
+	});
+
 	return (
 		<main>
-			{isAuthenticated.data?.is_authorized && (
+			{!shouldShowAuthError() && (
 				<div class="flex items-center justify-center w-screen h-screen text-white">
 					<div
 						class="relative flex"
@@ -34,7 +42,7 @@ export const App = () => {
 					</div>
 				</div>
 			)}
-			{!isAuthenticated.data?.is_authorized && <UnableToAuthenticate />}
+			{shouldShowAuthError() && <UnableToAuthenticate />}
 		</main>
 	);
 };
