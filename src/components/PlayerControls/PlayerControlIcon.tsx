@@ -31,7 +31,7 @@ export const PlayerControlIcon: Component<Props> = (props) => {
 					height={dimensions()}
 				/>
 			) : null}
-			{props.Icon ? <props.Icon color="#FFF" size={dimensions()} /> : null}
+			{props.Icon ? <props.Icon color="#ffffff" size={dimensions()} /> : null}
 			{props.showActiveIndicator && (
 				<span
 					class="absolute -bottom-4 left-1/2 bg-white rounded-full"
