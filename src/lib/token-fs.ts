@@ -2,7 +2,7 @@ import { promises as fs } from "node:fs";
 import { createServerOnlyFn } from "@tanstack/solid-start";
 import type { CacheFile } from "./types";
 
-const CACHE_FILE_NAME = ".cache";
+const CACHE_FILE_PATH = ".auth-cache/.cache";
 
 /**
  * Environment variables
@@ -20,7 +20,7 @@ export const getSpotifyClientSecret = createServerOnlyFn(
  */
 const readFile = createServerOnlyFn(async (): Promise<CacheFile> => {
 	try {
-		const data = await fs.readFile(CACHE_FILE_NAME, "utf-8");
+		const data = await fs.readFile(CACHE_FILE_PATH, "utf-8");
 		return JSON.parse(data);
 	} catch (err) {
 		console.error(err);
@@ -30,7 +30,7 @@ const readFile = createServerOnlyFn(async (): Promise<CacheFile> => {
 
 const saveFile = createServerOnlyFn(async (data: CacheFile) => {
 	try {
-		await fs.writeFile(CACHE_FILE_NAME, JSON.stringify(data));
+		await fs.writeFile(CACHE_FILE_PATH, JSON.stringify(data));
 	} catch (err) {
 		console.error(err);
 	}
