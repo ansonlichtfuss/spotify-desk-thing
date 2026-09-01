@@ -1,3 +1,4 @@
+import { ORPCError } from "@orpc/client";
 import { addMonths } from "date-fns/addMonths";
 import { addSeconds } from "date-fns/addSeconds";
 import { differenceInHours } from "date-fns/differenceInHours";
@@ -60,6 +61,11 @@ export const refreshToken = base
 		});
 
 		const response: SpotifyAuthResponse = await res.json();
+
+		if (!res.ok || res.status !== 200) {
+			console.log("hey tiff a major error", response);
+			throw new ORPCError("INTERNAL_SERVER_ERROR", { data: res });
+		}
 
 		await fsSetRefreshTokenData({
 			token: response.refresh_token,
