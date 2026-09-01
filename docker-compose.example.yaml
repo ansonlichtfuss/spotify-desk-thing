@@ -1,0 +1,16 @@
+services:
+  spotify-desk-thing:
+    container_name: spotify-desk-thing
+    build:
+      context: .
+      dockerfile: Dockerfile
+    env_file: ".env"
+    ports:
+      - "8787:8787"
+    restart: unless-stopped
+    volumes:
+      - spotify-desk-thing-auth-cache:/usr/src/app/.auth-cache
+
+volumes:
+  spotify-desk-thing-auth-cache:
+    name: spotify-desk-thing-auth-cache

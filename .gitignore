@@ -15,6 +15,7 @@ __unconfig*
 .netlify
 .vinxi
 .cache
+.auth-cache
 netlify
 
 # IDEs and editors
