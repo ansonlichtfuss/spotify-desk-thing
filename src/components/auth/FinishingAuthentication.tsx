@@ -25,7 +25,10 @@ export const FinishingAuthentication = () => {
 		() => searchParams().code,
 		(code) => {
 			if (code) {
-				getRefreshToken.mutate({ code });
+				getRefreshToken.mutate({
+					code,
+					redirectUri: `${window.location.origin}/auth/callback`,
+				});
 			} else {
 				setHasError(true);
 			}

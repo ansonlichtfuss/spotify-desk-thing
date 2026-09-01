@@ -10,7 +10,7 @@ import {
 	getSpotifyClientId,
 	getSpotifyClientSecret,
 } from "../../token-fs";
-import { OAUTH_REDIRECT_URI, SPOTIFY_API_URLS } from "../constants";
+import { SPOTIFY_API_URLS } from "../constants";
 import { base } from "../handler";
 
 type SpotifyAuthResponse = {
@@ -41,7 +41,7 @@ export const isAuthorized = base.handler(async () => {
 });
 
 export const refreshToken = base
-	.input(z.object({ code: z.string() }))
+	.input(z.object({ code: z.string(), redirectUri: z.string() }))
 	.handler(async ({ input }) => {
 		const client_id = getSpotifyClientId();
 		const client_secret = getSpotifyClientSecret();
@@ -55,7 +55,7 @@ export const refreshToken = base
 			},
 			body: new URLSearchParams({
 				code: input.code,
-				redirect_uri: OAUTH_REDIRECT_URI,
+				redirect_uri: input.redirectUri,
 				grant_type: "authorization_code",
 			}),
 		});
