@@ -13,12 +13,6 @@ export const SpotifyNowPlaying: Component = () => {
 	const nowPlayingQuery = useQuery(() =>
 		orpc.metadata.nowPlaying.queryOptions(),
 	);
-	const isSavedQuery = useQuery(() =>
-		orpc.metadata.saved.queryOptions({
-			input: { ids: [nowPlayingQuery.data?.item?.id || ""] },
-			enabled: !!nowPlayingQuery.data?.item?.id,
-		}),
-	);
 
 	createEffect(
 		() => ({
@@ -90,7 +84,7 @@ export const SpotifyNowPlaying: Component = () => {
 						</p>
 					</div>
 
-					<PlayerControls isSaved={!!isSavedQuery.data?.[0]} />
+					<PlayerControls />
 				</DynamicBackground>
 			)}
 		</div>

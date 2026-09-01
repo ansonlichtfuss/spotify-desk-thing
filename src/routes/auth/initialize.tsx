@@ -9,8 +9,18 @@ export const Route = createFileRoute("/auth/initialize")({
 });
 
 const redirect_uri = "http://127.0.0.1:3000/auth/callback";
-const scope =
-	"streaming user-modify-playback-state user-read-playback-state user-read-currently-playing user-read-email user-read-playback-position user-read-private user-top-read user-library-read user-library-read";
+const scope = [
+	"streaming",
+	"user-modify-playback-state",
+	"user-read-playback-state",
+	"user-read-currently-playing",
+	"user-read-email",
+	"user-read-playback-position",
+	"user-read-private",
+	"user-top-read",
+	"user-library-read",
+	"user-library-modify",
+].join(",");
 
 function AuthInitialize() {
 	const query = useQuery(() => orpc.auth.clientId.queryOptions());

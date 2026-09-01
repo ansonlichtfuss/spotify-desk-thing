@@ -51,14 +51,14 @@ export const nowPlaying = base.handler(async ({ context }) => {
 	} as NowPlayingResponse;
 });
 
-export const saved = base
-	.input(z.object({ ids: z.string().array() }))
+export const isSaved = base
+	.input(z.object({ uris: z.string().array() }))
 	.handler(async ({ input, context }) => {
 		// const searchParams = new URL(ctx.req.url).searchParams;
 		const response = await spotifyFetchWithToken(
 			`${SPOTIFY_API_URLS.saved}?` +
 				new URLSearchParams({
-					ids: `${input.ids.join(",")}`,
+					uris: `${input.uris.join(",")}`,
 				}),
 			{
 				method: "GET",
