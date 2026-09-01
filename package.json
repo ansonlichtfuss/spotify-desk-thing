@@ -1,5 +1,5 @@
 {
-  "name": "solid2-rebuilt",
+  "name": "spotify-desk-thing",
   "private": true,
   "type": "module",
   "scripts": {
@@ -28,17 +28,17 @@
     "colorthief": "^3.5.0",
     "date-fns": "^4.4.0",
     "nitro": "3.0.260610-beta",
-    "sharp": "^0.35.3",
+    "sharp": "^0.35.4",
     "solid-icons": "^1.2.0",
     "solid-js": "2.0.0-rc.4",
     "tailwindcss": "^4.1.18",
-    "zod": "^4.4.3"
+    "zod": "^4.5.4"
   },
   "devDependencies": {
-    "@biomejs/biome": "2.5.10",
+    "@biomejs/biome": "2.5.11",
     "@tanstack/devtools-vite": "latest",
-    "@tanstack/router-cli": "^1.133.21",
-    "@types/node": "^26.2.0",
+    "@tanstack/router-cli": "^1.167.33",
+    "@types/node": "^26.4.0",
     "typescript": "^7.0.2",
     "vite": "^8.0.0",
     "vite-plugin-solid": "^3.0.0-next.27"
