@@ -32,9 +32,10 @@ export const isAuthorized = base.handler(async () => {
 	const refreshTokenData = await fsGetRefreshTokenData();
 
 	return {
-		is_authorized:
+		is_authorized: !!(
 			refreshTokenData?.expiration &&
-			differenceInHours(refreshTokenData.expiration, new Date()) > 24,
+			differenceInHours(refreshTokenData.expiration, new Date()) > 24
+		),
 	};
 });
 
