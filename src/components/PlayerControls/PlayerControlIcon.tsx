@@ -1,7 +1,9 @@
+import type { IconTypes } from "solid-icons";
 import { type Component, createMemo, type ParentProps } from "solid-js";
 
 interface Props extends ParentProps {
-	src: string;
+	src?: string;
+	Icon?: IconTypes;
 	alt?: string;
 	isDisabled?: boolean;
 	enlargeIcon?: boolean;
@@ -20,13 +22,16 @@ export const PlayerControlIcon: Component<Props> = (props) => {
 			disabled={props.isDisabled}
 			onClick={props.onClick}
 		>
-			<img
-				alt={props.alt}
-				class="group-hover:scale-105 "
-				src={props.src}
-				width={dimensions()}
-				height={dimensions()}
-			/>
+			{props.src ? (
+				<img
+					alt={props.alt}
+					class="group-hover:scale-105 "
+					src={props.src}
+					width={dimensions()}
+					height={dimensions()}
+				/>
+			) : null}
+			{props.Icon ? <props.Icon color="#FFF" size={dimensions()} /> : null}
 			{props.showActiveIndicator && (
 				<span
 					class="absolute -bottom-4 left-1/2 bg-white rounded-full"

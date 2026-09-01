@@ -1,9 +1,9 @@
 import { useQuery } from "@tanstack/solid-query";
+import { BiRegularMusic } from "solid-icons/bi";
 import { type Component, createEffect, createMemo } from "solid-js";
 import { mapTrackMetadata } from "../lib/map-metadata";
 import { orpc } from "../lib/orpc/client";
 import { DynamicBackground } from "./DynamicBackground";
-import SvgMusic from "./icons/bx-music.svg";
 import { PlayerControls } from "./PlayerControls/PlayerControls";
 import { Screensaver } from "./Screensaver";
 
@@ -68,12 +68,7 @@ export const SpotifyNowPlaying: Component = () => {
 							}}
 						>
 							<div class="absolute z-0">
-								<img
-									alt="Generic music icon"
-									src={SvgMusic}
-									width={`${PREVIEW_SIZE / 2}px`}
-									height={`${PREVIEW_SIZE / 2}px`}
-								/>
+								<BiRegularMusic color="#cccccc" size={PREVIEW_SIZE / 2} />
 							</div>
 							<div
 								class="relative z-10 "

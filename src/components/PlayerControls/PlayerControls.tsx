@@ -1,13 +1,15 @@
-import { useMutation, useQuery } from "@tanstack/solid-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/solid-query";
+import {
+	BiRegularPause,
+	BiRegularPlay,
+	BiRegularPlusCircle,
+	BiRegularShuffle,
+	BiRegularSkipNext,
+	BiRegularSkipPrevious,
+	BiSolidCheckCircle,
+} from "solid-icons/bi";
 import { type Component, createMemo } from "solid-js";
 import { orpc } from "../../lib/orpc/client";
-import SvgPause from "../icons/bx-pause.svg";
-import SvgPlay from "../icons/bx-play.svg";
-import SvgShuffle from "../icons/bx-shuffle.svg";
-import SvgSkipNext from "../icons/bx-skip-next.svg";
-import SvgSkipPrevious from "../icons/bx-skip-previous.svg";
-import SvgPlusCircle from "../icons/noun-add-button.svg";
-import SvgCheckmarkCircle from "../icons/noun-tick.svg";
 import { PlayerControlIcon } from "./PlayerControlIcon";
 import { PlayerProgressBar } from "./PlayerProgressBar";
 
@@ -16,6 +18,7 @@ interface PlayerControlsType {
 }
 
 export const PlayerControls: Component<PlayerControlsType> = (props) => {
+	const queryClient = useQueryClient();
 	const nowPlayingQuery = useQuery(() =>
 		orpc.metadata.nowPlaying.queryOptions(),
 	);
@@ -26,16 +29,29 @@ export const PlayerControls: Component<PlayerControlsType> = (props) => {
 			nowPlayingQuery.data?.device?.is_restricted,
 	);
 
-	const onSuccessMutator = () => ({
-		onSuccess: () => {
-			// slight delay to allow change to propagate through backend
-			setTimeout(() => {
-				nowPlayingQuery.refetch();
-			}, 500);
-		},
-	});
+	const onSuccessMutator = () => {
+		// slight delay to allow change to propagate through backend
+		setTimeout(() => {
+			nowPlayingQuery.refetch();
+		}, 500);
+	};
+
 	const setShuffle = useMutation(() =>
 		orpc.actions.shuffle.mutationOptions({
+			onMutate: () => {
+				queryClient.setQueryData(
+					orpc.metadata.nowPlaying.queryKey(),
+					(data) => {
+						if (data) {
+							return {
+								...data,
+								shuffle_state: !data?.shuffle_state,
+							};
+						}
+						return data;
+					},
+				);
+			},
 			onSuccess: onSuccessMutator,
 		}),
 	);
@@ -63,7 +79,7 @@ export const PlayerControls: Component<PlayerControlsType> = (props) => {
 		>
 			<PlayerProgressBar />
 			<PlayerControlIcon
-				src={SvgShuffle}
+				Icon={BiRegularShuffle}
 				isDisabled={shouldDisableControls()}
 				showActiveIndicator={nowPlayingQuery.data?.shuffle_state}
 				onClick={() =>
@@ -71,33 +87,34 @@ export const PlayerControls: Component<PlayerControlsType> = (props) => {
 				}
 			/>
 			<PlayerControlIcon
-				src={SvgSkipPrevious}
+				Icon={BiRegularSkipPrevious}
 				isDisabled={shouldDisableControls()}
+				enlargeIcon={true}
 				onClick={() => setPrevious.mutate()}
 			/>
 			{nowPlayingQuery.data?.is_playing ? (
 				<PlayerControlIcon
-					src={SvgPause}
+					Icon={BiRegularPause}
 					isDisabled={shouldDisableControls()}
 					enlargeIcon={true}
 					onClick={() => setPause.mutate()}
 				/>
 			) : (
 				<PlayerControlIcon
-					src={SvgPlay}
+					Icon={BiRegularPlay}
 					isDisabled={shouldDisableControls()}
 					enlargeIcon={true}
 					onClick={() => setPlay.mutate()}
 				/>
 			)}
 			<PlayerControlIcon
-				src={SvgSkipNext}
+				Icon={BiRegularSkipNext}
 				isDisabled={shouldDisableControls()}
 				enlargeIcon={true}
 				onClick={() => setNext.mutate()}
 			/>
 			<PlayerControlIcon
-				src={props.isSaved ? SvgCheckmarkCircle : SvgPlusCircle}
+				Icon={props.isSaved ? BiSolidCheckCircle : BiRegularPlusCircle}
 				isDisabled={shouldDisableControls()}
 			/>
 		</div>

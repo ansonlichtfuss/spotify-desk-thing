@@ -1,9 +1,9 @@
 import { useMutation } from "@tanstack/solid-query";
 import { Link, useRouter } from "@tanstack/solid-router";
+import { BiLogosSpotify } from "solid-icons/bi";
 import { createEffect, createSignal } from "solid-js";
 import { orpc } from "../../lib/orpc/client";
 import { Route } from "../../routes/auth/callback";
-import SvgSpotifyWhite from "../icons/spotify-white.svg";
 
 export const FinishingAuthentication = () => {
 	const searchParams = Route.useSearch();
@@ -24,31 +24,33 @@ export const FinishingAuthentication = () => {
 	createEffect(
 		() => searchParams().code,
 		(code) => {
-			getRefreshToken.mutate({ code });
+			if (code) {
+				getRefreshToken.mutate({ code });
+			} else {
+				setHasError(true);
+			}
 		},
 	);
 
 	return (
-		<div class="flex flex-col items-center justify-center h-screen strong">
-			<img
-				class="opacity-25 mb-10"
-				src={SvgSpotifyWhite}
-				width={"100"}
-				height={"100"}
-				alt="Spotify logo"
-			/>
+		<div class="text-white flex flex-col items-center justify-center h-screen strong">
+			<BiLogosSpotify color="#1ED35F" size={120} />
+
 			{hasError() ? (
-				<p class="text-white text-center max-w-sm font-bold">
-					An error occurred while logging in.
+				<>
+					<p class="text-center max-w-sm mt-5">
+						An error occurred while logging in.
+					</p>
+
 					<Link
 						to="/auth/initialize"
-						class="rounded bg-white px-8 py-2 inline mt-5"
+						class="border-b-2 border-gray-500 inline mt-5 font-bold"
 					>
-						Click here to try again
+						Try again
 					</Link>
-				</p>
+				</>
 			) : (
-				<p class="text-white text-center max-w-sm font-bold">Logging in...</p>
+				<p class="mt-5 italic">Logging in...</p>
 			)}
 		</div>
 	);

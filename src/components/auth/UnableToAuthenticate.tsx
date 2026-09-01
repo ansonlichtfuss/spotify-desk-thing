@@ -1,24 +1,24 @@
 import { Link } from "@tanstack/solid-router";
-import SvgSpotifyWhite from "../icons/spotify-white.svg";
+import { BiLogosSpotify } from "solid-icons/bi";
 
 export const UnableToAuthenticate = () => {
 	return (
-		<div class="flex flex-col items-center justify-center h-screen">
-			<img
-				class="opacity-25 mb-10"
-				src={SvgSpotifyWhite}
-				width={"100"}
-				height={"100"}
-				alt="Spotify logo"
-			/>
-			<p class="text-white text-center max-w-sm font-bold">
-				Unable to authenticate with API.
-				<br />
-				Refresh token either expired or missing.
+		<div class="text-white flex flex-col items-center justify-center h-screen text-center">
+			<BiLogosSpotify color="#1ED35F" size={120} />
+			<p class="mt-5">
+				<strong>Log in to use Desk Thing.</strong>
+			</p>
+			<p class="mt-5 italic">
+				<small class="max-w-80 block">
+					Follow the README guide to set up your Spotify Web API client. Make
+					sure to set your redirect URL path to:
+					<br />
+					<strong>{window.location.host}</strong>
+				</small>
 			</p>
 			<Link
 				to="/auth/initialize"
-				class="rounded bg-white px-8 py-2 inline mt-5 font-bold"
+				class="border-b-2 border-gray-500 inline mt-5 font-bold"
 			>
 				Click here to log in
 			</Link>
