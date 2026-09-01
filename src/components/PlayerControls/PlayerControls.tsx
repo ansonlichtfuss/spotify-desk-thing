@@ -8,20 +8,23 @@ import {
 	BiRegularSkipPrevious,
 	BiSolidCheckCircle,
 } from "solid-icons/bi";
-import { type Component, createMemo } from "solid-js";
+import { createMemo } from "solid-js";
 import { orpc } from "../../lib/orpc/client";
 import { PlayerControlIcon } from "./PlayerControlIcon";
 import { PlayerProgressBar } from "./PlayerProgressBar";
 
-interface PlayerControlsType {
-	isSaved: boolean;
-}
-
-export const PlayerControls: Component<PlayerControlsType> = (props) => {
+export const PlayerControls = () => {
 	const queryClient = useQueryClient();
 	const nowPlayingQuery = useQuery(() =>
 		orpc.metadata.nowPlaying.queryOptions(),
 	);
+	const isSavedQuery = useQuery(() =>
+		orpc.metadata.isSaved.queryOptions({
+			input: { uris: [nowPlayingQuery.data?.item?.uri || ""] },
+			enabled: !!nowPlayingQuery.data?.item?.uri,
+		}),
+	);
+	const isSaved = createMemo(() => isSavedQuery.data?.[0]);
 	const shouldDisableControls = createMemo(
 		() =>
 			nowPlayingQuery.data === undefined ||
@@ -29,12 +32,17 @@ export const PlayerControls: Component<PlayerControlsType> = (props) => {
 			nowPlayingQuery.data?.device?.is_restricted,
 	);
 
-	const onSuccessMutator = () => {
-		// slight delay to allow change to propagate through backend
-		setTimeout(() => {
-			nowPlayingQuery.refetch();
-		}, 500);
-	};
+	const onSuccessMutator =
+		(refetchIsSaved: boolean = false) =>
+		() => {
+			// slight delay to allow change to propagate through backend
+			setTimeout(() => {
+				nowPlayingQuery.refetch();
+				if (refetchIsSaved) {
+					isSavedQuery.refetch();
+				}
+			}, 300);
+		};
 
 	const setShuffle = useMutation(() =>
 		orpc.actions.shuffle.mutationOptions({
@@ -52,20 +60,50 @@ export const PlayerControls: Component<PlayerControlsType> = (props) => {
 					},
 				);
 			},
-			onSuccess: onSuccessMutator,
+			onSuccess: onSuccessMutator(),
 		}),
 	);
 	const setPrevious = useMutation(() =>
-		orpc.actions.previous.mutationOptions({ onSuccess: onSuccessMutator }),
+		orpc.actions.previous.mutationOptions({ onSuccess: onSuccessMutator() }),
 	);
 	const setPause = useMutation(() =>
-		orpc.actions.pause.mutationOptions({ onSuccess: onSuccessMutator }),
+		orpc.actions.pause.mutationOptions({ onSuccess: onSuccessMutator() }),
 	);
 	const setPlay = useMutation(() =>
-		orpc.actions.play.mutationOptions({ onSuccess: onSuccessMutator }),
+		orpc.actions.play.mutationOptions({ onSuccess: onSuccessMutator() }),
 	);
 	const setNext = useMutation(() =>
-		orpc.actions.next.mutationOptions({ onSuccess: onSuccessMutator }),
+		orpc.actions.next.mutationOptions({ onSuccess: onSuccessMutator() }),
+	);
+	const setSaveToLibrary = useMutation(() =>
+		orpc.actions.saveToLibrary.mutationOptions({
+			onMutate: () => {
+				queryClient.setQueryData(
+					orpc.metadata.isSaved.queryKey({
+						input: { uris: [nowPlayingQuery.data?.item?.uri || ""] },
+					}),
+					() => {
+						return [true];
+					},
+				);
+			},
+			onSuccess: onSuccessMutator(true),
+		}),
+	);
+	const setRemoveFromLibrary = useMutation(() =>
+		orpc.actions.removeFromLibrary.mutationOptions({
+			onMutate: () => {
+				queryClient.setQueryData(
+					orpc.metadata.isSaved.queryKey({
+						input: { uris: [nowPlayingQuery.data?.item?.uri || ""] },
+					}),
+					() => {
+						return [false];
+					},
+				);
+			},
+			onSuccess: onSuccessMutator(true),
+		}),
 	);
 
 	return (
@@ -114,7 +152,19 @@ export const PlayerControls: Component<PlayerControlsType> = (props) => {
 				onClick={() => setNext.mutate()}
 			/>
 			<PlayerControlIcon
-				Icon={props.isSaved ? BiSolidCheckCircle : BiRegularPlusCircle}
+				Icon={isSaved() ? BiSolidCheckCircle : BiRegularPlusCircle}
+				onClick={() => {
+					if (!nowPlayingQuery.data.item?.uri) {
+						return;
+					}
+					if (isSaved()) {
+						setRemoveFromLibrary.mutate({
+							uris: [nowPlayingQuery.data.item?.uri],
+						});
+					} else {
+						setSaveToLibrary.mutate({ uris: [nowPlayingQuery.data.item?.uri] });
+					}
+				}}
 				isDisabled={shouldDisableControls()}
 			/>
 		</div>

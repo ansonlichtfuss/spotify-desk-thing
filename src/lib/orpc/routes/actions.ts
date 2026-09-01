@@ -87,3 +87,52 @@ export const shuffle = base
 			return new ORPCError("INTERNAL_SERVER_ERROR");
 		}
 	});
+
+export const saveToLibrary = base
+	.input(z.object({ uris: z.string().array() }))
+	.handler(async ({ input, context }) => {
+		// const searchParams = new URL(ctx.req.url).searchParams;
+		const response = await spotifyFetchWithToken(
+			`${SPOTIFY_API_URLS.library}?` +
+				new URLSearchParams({
+					uris: `${input.uris.join(",")}`,
+				}),
+			{
+				method: "PUT",
+				headers: {
+					Authorization: context.reqHeaders?.get("Authorization") ?? "",
+				},
+			},
+		);
+
+		if (response.status === 200 || response.status === 204) {
+			return "";
+		} else {
+			return new ORPCError("INTERNAL_SERVER_ERROR");
+		}
+	});
+
+export const removeFromLibrary = base
+	.input(z.object({ uris: z.string().array() }))
+	.handler(async ({ input, context }) => {
+		// const searchParams = new URL(ctx.req.url).searchParams;
+		const response = await spotifyFetchWithToken(
+			`${SPOTIFY_API_URLS.library}?` +
+				new URLSearchParams({
+					uris: `${input.uris.join(",")}`,
+				}),
+			{
+				method: "DELETE",
+				headers: {
+					Authorization: context.reqHeaders?.get("Authorization") ?? "",
+				},
+			},
+		);
+
+		if (response.status === 200 || response.status === 204) {
+			return "";
+		} else {
+			console.log("hey tiff res", response);
+			return new ORPCError("INTERNAL_SERVER_ERROR");
+		}
+	});
