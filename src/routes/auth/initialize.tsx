@@ -23,7 +23,7 @@ const scope = [
 
 function AuthInitialize() {
 	const query = useQuery(() => orpc.auth.clientId.queryOptions());
-	const redirect_uri = `http://${window.location.host}/auth/callback`;
+	const redirect_uri = `${window.location.origin}/auth/callback`;
 
 	createEffect(
 		() => ({

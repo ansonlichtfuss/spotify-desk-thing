@@ -13,7 +13,7 @@ export const UnableToAuthenticate = () => {
 					Follow the README guide to set up your Spotify Web API client. Make
 					sure to set your Spotify API App redirect URI path to:
 					<br />
-					<strong>{window.location.host}/auth/callback</strong>
+					<strong>{window.location.origin}/auth/callback</strong>
 				</small>
 			</p>
 			<Link
