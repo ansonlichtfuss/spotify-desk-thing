@@ -21,6 +21,8 @@ _Controls may be disabled when certain Spotify Connect devices are used, as the 
 
 **NEW RELEASE (Sept 2026):**
 
+What's changed:
+
 - **Saved tracks:** Save and remove tracks from your library.
 
 - **Auth:** An easier authentication experience. No more copying refresh tokens, just click Log In. _Now that Spotify API expires login tokens, the app will ask to re-login every 6 months._
@@ -30,6 +32,13 @@ _Controls may be disabled when certain Spotify Connect devices are used, as the 
   - **BREAKING CHANGE:** Environment variable names have changed, removing the `VITE_` prefix.
 
 - **Performance:** The app has been completely rewritten for [SolidJS v2](https://v2.solidjs.com/), migrated to [TanStack Start](https://tanstack.com/start/latest) and [ORPC](https://orpc.dev/docs/getting-started). Much of the codebase was cleaned up, duplicate/unused code removed for better maintainability.
+
+> _This release is currently built on pre-release builds and is subject to potential downstream breaking changes for these packages:_
+>
+>- ORPC v2
+>- SolidJS v2
+>- TanStack Solid Query (v6) + Router (v2) + Start (v2)
+>
 
 ---
 
