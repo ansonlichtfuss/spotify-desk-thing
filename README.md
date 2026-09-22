@@ -100,7 +100,3 @@ For my setup, I have a Raspberry PI 3A running [DietPi](https://dietpi.com) conf
 ## Credits
 
 Other folks rooting and discovering the Spotify Car Thing is a web view running Chromium - https://github.com/err4o4/spotify-car-thing-reverse-engineering/issues
-
-## AI Policy
-
-AI is not used to write the code of Spotify Desk Thing. It is sometimes used to debug and research. All outputs are verified by a human before being translated into human-written code.
