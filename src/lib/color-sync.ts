@@ -21,7 +21,10 @@ async function downloadImageToBuffer(url: string) {
 
 export const getSyncedColor = async (imgUrl: string) => {
 	const imgBuffer = await downloadImageToBuffer(imgUrl);
-	const palette = await getPalette(imgBuffer, { colorCount: 5 });
+	const palette = await getPalette(imgBuffer, {
+		colorCount: 5,
+		minSaturation: 0.1,
+	});
 
 	const firstDarkIndex = palette?.findIndex((color) => color.isDark) ?? -1;
 
