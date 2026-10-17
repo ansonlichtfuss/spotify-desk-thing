@@ -27,20 +27,20 @@
     "@types/spotify-api": "^0.0.26",
     "colorthief": "^3.5.0",
     "date-fns": "^4.4.0",
-    "nitro": "3.0.260610-beta",
-    "sharp": "^0.35.4",
+    "nitro": "3.0.260903-beta",
+    "sharp": "^0.35.5",
     "solid-icons": "^1.2.0",
     "solid-js": "2.0.0-rc.4",
     "tailwindcss": "^4.1.18",
-    "zod": "^4.6.5"
+    "zod": "^4.6.7"
   },
   "devDependencies": {
-    "@biomejs/biome": "2.5.14",
+    "@biomejs/biome": "2.5.15",
     "@tanstack/devtools-vite": "latest",
-    "@tanstack/router-cli": "^1.167.38",
-    "@types/node": "^26.6.2",
+    "@tanstack/router-cli": "^1.167.44",
+    "@types/node": "^26.6.5",
     "typescript": "^7.0.2",
-    "vite": "^8.3.0",
+    "vite": "^8.3.4",
     "vite-plugin-solid": "^3.0.0-next.27"
   }
 }
