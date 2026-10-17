@@ -28,5 +28,5 @@ export const getSyncedColor = async (imgUrl: string) => {
 
 	const firstDarkIndex = palette?.findIndex((color) => color.isDark) ?? -1;
 
-	return palette?.[firstDarkIndex].hex() ?? DEFAULT_ACCENT_COLOR;
+	return palette?.[firstDarkIndex]?.hex() ?? DEFAULT_ACCENT_COLOR;
 };
